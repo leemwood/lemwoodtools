@@ -1,7 +1,7 @@
 [versions]
 # Kotlin & Android
 kotlin = "1.9.22"
-android-gradle-plugin = "8.1.2"
+android-gradle-plugin = "8.11.1"
 core-ktx = "1.12.0"
 lifecycle-runtime-ktx = "2.7.0"
 
