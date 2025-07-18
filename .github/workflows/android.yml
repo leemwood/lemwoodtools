@@ -17,6 +17,14 @@ on:
         - staging
         - release
 
+# Add permissions for the workflow
+permissions:
+  contents: read
+  actions: read
+  checks: write
+  pull-requests: write
+  security-events: write
+
 env:
   GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2 -Dorg.gradle.parallel=true
   GRADLE_USER_HOME: ${{ github.workspace }}/.gradle
@@ -37,50 +45,59 @@ jobs:
         distribution: 'temurin'
         
     - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@v4
+      uses: gradle/gradle-build-action@v3
       with:
         gradle-home-cache-cleanup: true
         
-    - name: Cache Gradle dependencies
-      uses: actions/cache@v4
-      with:
-        path: |
-          ~/.gradle/caches
-          ~/.gradle/wrapper
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-        restore-keys: |
-          ${{ runner.os }}-gradle-
-          
-    - name: Make gradlew executable
-      run: chmod +x ./gradlew
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+      
+    - name: Run unit tests
+      run: ./gradlew testDebugUnitTest --continue
       
     - name: Run lint
       run: ./gradlew lintDebug
-      
-    - name: Upload lint reports
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: lint-reports-${{ github.run_number }}
-        path: app/build/reports/lint-results-debug.html
-        retention-days: 30
-        
-    - name: Run unit tests
-      run: ./gradlew testDebugUnitTest
       
     - name: Upload test reports
       uses: actions/upload-artifact@v4
       if: always()
       with:
         name: test-reports-${{ github.run_number }}
-        path: app/build/reports/tests/testDebugUnitTest/
-        retention-days: 30
-
-    - name: Publish Test Results
-      uses: EnricoMi/publish-unit-test-result-action@v2
+        path: |
+          app/build/reports/tests/
+          app/build/test-results/
+        retention-days: 7
+        
+    - name: Upload lint reports
+      uses: actions/upload-artifact@v4
       if: always()
       with:
-        files: app/build/test-results/testDebugUnitTest/TEST-*.xml
+        name: lint-reports-${{ github.run_number }}
+        path: |
+          app/build/reports/lint-results-*.html
+          app/build/reports/lint-results-*.xml
+        retention-days: 7
+        
+    - name: Comment test results on PR
+      if: github.event_name == 'pull_request' && always()
+      run: |
+        chmod +x scripts/parse-test-results.sh
+        scripts/parse-test-results.sh
+        
+    - name: Upload test summary
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-summary-${{ github.run_number }}
+        path: test-summary.md
+        retention-days: 7
+        
+    - name: Add test summary to job summary
+      if: always()
+      run: |
+        if [ -f "test-summary.md" ]; then
+          cat test-summary.md >> $GITHUB_STEP_SUMMARY
+        fi
 
   build:
     name: Build APK
