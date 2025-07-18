@@ -8,46 +8,17 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     
-    <!-- 柠枺工具箱主题色 - Material Design 3 -->
-    <!-- Primary colors -->
+    <!-- 柠枺工具箱主题色 -->
     <color name="lemwood_primary">#FF2E7D32</color>
-    <color name="lemwood_on_primary">#FFFFFFFF</color>
-    <color name="lemwood_primary_container">#FFA5D6A7</color>
-    <color name="lemwood_on_primary_container">#FF1B5E20</color>
-    
-    <!-- Secondary colors -->
-    <color name="lemwood_secondary">#FF4CAF50</color>
-    <color name="lemwood_on_secondary">#FFFFFFFF</color>
-    <color name="lemwood_secondary_container">#FFC8E6C9</color>
-    <color name="lemwood_on_secondary_container">#FF2E7D32</color>
-    
-    <!-- Tertiary colors -->
-    <color name="lemwood_tertiary">#FF66BB6A</color>
-    <color name="lemwood_on_tertiary">#FFFFFFFF</color>
-    <color name="lemwood_tertiary_container">#FFE8F5E8</color>
-    <color name="lemwood_on_tertiary_container">#FF1B5E20</color>
-    
-    <!-- Error colors -->
-    <color name="lemwood_error">#FFD32F2F</color>
-    <color name="lemwood_on_error">#FFFFFFFF</color>
-    <color name="lemwood_error_container">#FFFFCDD2</color>
-    <color name="lemwood_on_error_container">#FFB71C1C</color>
-    
-    <!-- Background colors -->
-    <color name="lemwood_background">#FFF1F8E9</color>
-    <color name="lemwood_on_background">#FF1B5E20</color>
-    
-    <!-- Surface colors -->
-    <color name="lemwood_surface">#FFFFFFFF</color>
-    <color name="lemwood_on_surface">#FF1B5E20</color>
-    <color name="lemwood_surface_variant">#FFF5F5F5</color>
-    <color name="lemwood_on_surface_variant">#FF424242</color>
-    
-    <!-- Outline colors -->
-    <color name="lemwood_outline">#FF9E9E9E</color>
-    <color name="lemwood_outline_variant">#FFE0E0E0</color>
-    
-    <!-- Legacy colors for backward compatibility -->
     <color name="lemwood_primary_variant">#FF1B5E20</color>
+    <color name="lemwood_secondary">#FF4CAF50</color>
     <color name="lemwood_secondary_variant">#FF388E3C</color>
+    <color name="lemwood_background">#FFF1F8E9</color>
+    <color name="lemwood_surface">#FFFFFFFF</color>
+    <color name="lemwood_error">#FFD32F2F</color>
+    <color name="lemwood_on_primary">#FFFFFFFF</color>
+    <color name="lemwood_on_secondary">#FFFFFFFF</color>
+    <color name="lemwood_on_background">#FF1B5E20</color>
+    <color name="lemwood_on_surface">#FF1B5E20</color>
+    <color name="lemwood_on_error">#FFFFFFFF</color>
 </resources>
