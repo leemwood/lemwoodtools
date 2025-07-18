@@ -42,26 +42,20 @@ lemwoodtools/
 │   └── proguard-rules.pro        # 代码混淆和性能优化规则
 ├── .github/
 │   ├── workflows/
-│   │   ├── android.yml           # CI/CD工作流
-│   │   └── code-quality.yml      # 代码质量检查工作流
+│   │   └── android.yml           # CI/CD工作流
 │   ├── dependabot.yml            # 依赖自动更新配置
 │   └── SECRETS.md                # Secrets配置说明
-├── scripts/
-│   ├── parse-test-results.sh     # 测试结果解析脚本(Linux/macOS)
-│   ├── parse-test-results.ps1    # 测试结果解析脚本(Windows)
-│   ├── test-parsing.sh           # 脚本测试工具
-│   └── README.md                 # 脚本使用说明
+
 ├── build.gradle                  # 项目构建配置
 ├── settings.gradle               # 项目设置
 ├── gradle.properties             # Gradle属性和性能优化
-├── detekt.yml                    # Detekt静态分析配置
-├── dependency-check-suppressions.xml # 依赖安全扫描抑制规则
-├── .editorconfig                 # 编辑器配置
-├── build.sh                      # Linux/macOS构建脚本
-├── build.bat                     # Windows构建脚本
-├── CODE_QUALITY.md               # 代码质量和维护性指南
-├── CICD.md                       # CI/CD详细说明
-└── README.md                     # 项目说明
+├── .editorconfig               # 编辑器配置
+├── build.gradle                # 项目构建配置
+├── settings.gradle             # 项目设置
+├── gradle.properties           # Gradle属性和性能优化
+├── proguard-rules.pro          # ProGuard混淆规则
+├── QUICK_START.md              # 快速开始指南
+└── README.md                   # 项目说明
 ```
 
 ## 🔧 开发环境配置
@@ -121,16 +115,15 @@ adb install app/build/outputs/apk/release/app-release.apk
 
 ## 🔄 CI/CD 配置
 
-项目使用GitHub Actions实现自动化构建和部署：
+项目使用GitHub Actions进行自动化构建：
 
-### 工作流程
-1. **测试阶段**: 代码检查(Lint) + 单元测试
-2. **构建阶段**: 生成Debug和Release APK
-3. **部署阶段**: 创建GitHub Release并上传APK
+### 构建流程
+- **触发条件**: push到main/develop分支，PR到main分支，手动触发
+- **构建类型**: Debug、Staging、Release
+- **自动发布**: main分支推送时自动创建GitHub Release
 
-### 触发条件
-- `main`分支和`develop`分支的Push事件
-- `main`分支的Pull Request事件
+### 工作流文件
+- `.github/workflows/android.yml` - 主要构建流程
 
 ### 签名配置
 为了生成正式的Release版本，需要在GitHub仓库中配置以下Secrets：
@@ -145,87 +138,24 @@ adb install app/build/outputs/apk/release/app-release.apk
 ### 构建状态
 [![Android CI/CD](https://github.com/username/lemwoodtools/actions/workflows/android.yml/badge.svg)](https://github.com/username/lemwoodtools/actions/workflows/android.yml)
 
-## 📊 代码质量与维护性
+## 📊 代码质量与可维护性
 
-本项目集成了多种代码质量工具和最佳实践，确保代码的高质量和可维护性。
+### 开发工具配置
+- **EditorConfig**: 统一代码格式 (`.editorconfig`)
+- **ProGuard**: 代码混淆和优化 (`proguard-rules.pro`)
 
-### 🔍 静态代码分析
+### 自动化工具
+- **Dependabot**: 自动依赖更新 (`.github/dependabot.yml`)
+- **GitHub Actions**: 自动化构建流程
 
-#### Detekt - Kotlin静态分析
+### 一键命令
 ```bash
-# 运行Detekt检查
-./gradlew detekt
+# 构建所有变体
+./gradlew build
 
-# 查看Detekt报告
-open app/build/reports/detekt/detekt.html
+# 清理项目
+./gradlew clean
 ```
-
-#### Android Lint - Android特定检查
-```bash
-# 运行Lint检查
-./gradlew lintDebug
-
-# 查看Lint报告
-open app/build/reports/lint-results-debug.html
-```
-
-#### OWASP依赖安全扫描
-```bash
-# 运行依赖安全检查
-./gradlew dependencyCheckAnalyze
-
-# 查看安全报告
-open app/build/reports/dependency-check-report.html
-```
-
-### 🧪 测试与覆盖率
-
-#### 单元测试
-```bash
-# 运行单元测试
-./gradlew testDebugUnitTest
-
-# 查看测试报告
-open app/build/reports/tests/testDebugUnitTest/index.html
-```
-
-#### 代码覆盖率
-```bash
-# 生成测试覆盖率报告
-./gradlew testDebugUnitTestCoverage
-
-# 查看覆盖率报告
-open app/build/reports/coverage/test/debug/index.html
-```
-
-### 🚀 一键代码质量检查
-```bash
-# 运行所有代码质量检查
-./gradlew codeQuality
-```
-
-### 📈 质量度量目标
-- **代码覆盖率**: > 80%
-- **Detekt问题**: < 10个
-- **Lint错误**: 0个
-- **安全漏洞**: 0个高危漏洞
-
-### 🛠️ 自动化工具
-
-#### GitHub Actions工作流
-- **代码质量检查**: `.github/workflows/code-quality.yml`
-- **CI/CD流水线**: `.github/workflows/android.yml`
-- **依赖更新**: Dependabot配置
-
-#### 开发工具配置
-- **EditorConfig**: `.editorconfig` - 统一代码格式
-- **Detekt配置**: `detekt.yml` - 自定义检查规则
-- **ProGuard规则**: `app/proguard-rules.pro` - 性能优化
-
-### 📚 质量文档
-- **详细指南**: [CODE_QUALITY.md](CODE_QUALITY.md)
-- **CI/CD说明**: [CICD.md](CICD.md)
-- **脚本文档**: [scripts/README.md](scripts/README.md)
 
 ## 🎨 设计规范
 
