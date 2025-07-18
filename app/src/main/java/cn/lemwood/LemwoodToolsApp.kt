@@ -1,220 +1,171 @@
 package cn.lemwood
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-
-data class ToolItem(
-    val title: String,
-    val description: String,
-    val icon: ImageVector,
-    val route: String
-)
+import cn.lemwood.navigation.Screen
+import cn.lemwood.navigation.bottomNavItems
+import cn.lemwood.ui.components.BottomNavigationBar
+import cn.lemwood.ui.components.TopAppBarWithMenu
+import cn.lemwood.ui.screens.HomeScreen
+import cn.lemwood.ui.screens.ToolsScreen
+import cn.lemwood.ui.screens.SearchScreen
+import cn.lemwood.ui.screens.SettingsScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LemwoodToolsApp() {
     val navController = rememberNavController()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
     
-    NavHost(
-        navController = navController,
-        startDestination = "home"
-    ) {
-        composable("home") {
-            HomeScreen(navController)
-        }
-        composable("calculator") {
-            ToolScreen("计算器", "计算器功能即将推出")
-        }
-        composable("converter") {
-            ToolScreen("单位转换", "单位转换功能即将推出")
-        }
-        composable("qrcode") {
-            ToolScreen("二维码", "二维码功能即将推出")
-        }
-        composable("text_tools") {
-            ToolScreen("文本工具", "文本工具功能即将推出")
-        }
+    // 判断是否显示底部导航栏
+    val showBottomBar = currentRoute in bottomNavItems.map { it.route }
+    
+    // 判断是否可以返回
+    val canNavigateBack = currentRoute !in bottomNavItems.map { it.route }
+    
+    // 获取当前页面标题
+    val currentTitle = when (currentRoute) {
+        Screen.Home.route -> Screen.Home.title
+        Screen.Tools.route -> Screen.Tools.title
+        Screen.Search.route -> Screen.Search.title
+        Screen.Settings.route -> Screen.Settings.title
+        Screen.Calculator.route -> Screen.Calculator.title
+        Screen.Converter.route -> Screen.Converter.title
+        Screen.QRCode.route -> Screen.QRCode.title
+        Screen.TextTools.route -> Screen.TextTools.title
+        Screen.ColorPicker.route -> Screen.ColorPicker.title
+        Screen.Timer.route -> Screen.Timer.title
+        Screen.Weather.route -> Screen.Weather.title
+        Screen.Notes.route -> Screen.Notes.title
+        else -> "柠枺工具箱"
     }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun HomeScreen(navController: NavController) {
-    val tools = listOf(
-        ToolItem("计算器", "科学计算器和基础计算", Icons.Default.Calculate, "calculator"),
-        ToolItem("单位转换", "长度、重量、温度等单位转换", Icons.Default.SwapHoriz, "converter"),
-        ToolItem("二维码", "二维码生成和扫描", Icons.Default.QrCode, "qrcode"),
-        ToolItem("文本工具", "文本处理和格式化", Icons.Default.TextFields, "text_tools")
-    )
     
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { 
-                    Text(
-                        "柠枺工具箱",
-                        fontWeight = FontWeight.Bold
-                    ) 
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                )
+            TopAppBarWithMenu(
+                title = currentTitle,
+                canNavigateBack = canNavigateBack,
+                onNavigateBack = { navController.popBackStack() },
+                onMenuClick = { /* TODO: 实现侧边菜单 */ }
             )
+        },
+        bottomBar = {
+            if (showBottomBar) {
+                BottomNavigationBar(
+                    currentRoute = currentRoute,
+                    onNavigate = { route ->
+                        navController.navigate(route) {
+                            // 避免重复导航到同一页面
+                            launchSingleTop = true
+                            // 清除回退栈到起始页面
+                            popUpTo(Screen.Home.route) {
+                                saveState = true
+                            }
+                            // 恢复状态
+                            restoreState = true
+                        }
+                    }
+                )
+            }
         }
     ) { paddingValues ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+        NavHost(
+            navController = navController,
+            startDestination = Screen.Home.route,
+            modifier = Modifier.padding(paddingValues)
         ) {
-            item {
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer
-                    )
-                ) {
-                    Column(
-                        modifier = Modifier.padding(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Icon(
-                            Icons.Default.Build,
-                            contentDescription = null,
-                            modifier = Modifier.size(48.dp),
-                            tint = MaterialTheme.colorScheme.onPrimaryContainer
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            "欢迎使用柠枺工具箱",
-                            style = MaterialTheme.typography.headlineSmall,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Text(
-                            "您的日常工具助手",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer
-                        )
-                    }
-                }
+            // 底部导航页面
+            composable(Screen.Home.route) {
+                HomeScreen(navController)
+            }
+            composable(Screen.Tools.route) {
+                ToolsScreen(navController)
+            }
+            composable(Screen.Search.route) {
+                SearchScreen(navController)
+            }
+            composable(Screen.Settings.route) {
+                SettingsScreen(navController)
             }
             
-            items(tools) { tool ->
-                ToolCard(
-                    tool = tool,
-                    onClick = { navController.navigate(tool.route) }
-                )
+            // 工具页面
+            composable(Screen.Calculator.route) {
+                ToolScreen("计算器", "这里是计算器功能")
+            }
+            composable(Screen.Converter.route) {
+                ToolScreen("单位转换", "这里是单位转换功能")
+            }
+            composable(Screen.QRCode.route) {
+                ToolScreen("二维码", "这里是二维码功能")
+            }
+            composable(Screen.TextTools.route) {
+                ToolScreen("文本工具", "这里是文本工具功能")
+            }
+            composable(Screen.ColorPicker.route) {
+                ToolScreen("颜色选择器", "这里是颜色选择器功能")
+            }
+            composable(Screen.Timer.route) {
+                ToolScreen("计时器", "这里是计时器功能")
+            }
+            composable(Screen.Weather.route) {
+                ToolScreen("天气查询", "这里是天气查询功能")
+            }
+            composable(Screen.Notes.route) {
+                ToolScreen("快速笔记", "这里是快速笔记功能")
             }
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ToolCard(
-    tool: ToolItem,
-    onClick: () -> Unit
-) {
-    Card(
-        onClick = onClick,
-        modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                tool.icon,
-                contentDescription = null,
-                modifier = Modifier.size(40.dp),
-                tint = MaterialTheme.colorScheme.primary
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
-                Text(
-                    tool.title,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Medium
-                )
-                Text(
-                    tool.description,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-            Icon(
-                Icons.Default.ChevronRight,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
-    }
-}
 
-@OptIn(ExperimentalMaterial3Api::class)
+
+
+
 @Composable
 fun ToolScreen(title: String, content: String) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(title) },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                )
-            )
-        }
-    ) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
-            contentAlignment = Alignment.Center
-        ) {
-            Card(
-                modifier = Modifier.padding(16.dp)
-            ) {
-                Column(
-                    modifier = Modifier.padding(24.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Icon(
-                        Icons.Default.Construction,
-                        contentDescription = null,
-                        modifier = Modifier.size(64.dp),
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Text(
-                        content,
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                }
-            }
-        }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Icon(
+            Icons.Default.Build,
+            contentDescription = null,
+            modifier = Modifier.size(64.dp),
+            tint = MaterialTheme.colorScheme.primary
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            title,
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            content,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+        Text(
+            "功能开发中...",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.outline
+        )
     }
 }
