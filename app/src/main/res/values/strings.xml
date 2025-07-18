@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">柠枺工具箱</string>
+    <string name="welcome_title">欢迎使用柠枺工具箱</string>
+    <string name="welcome_subtitle">您的日常工具助手</string>
+    <string name="calculator">计算器</string>
+    <string name="calculator_desc">科学计算器和基础计算</string>
+    <string name="converter">单位转换</string>
+    <string name="converter_desc">长度、重量、温度等单位转换</string>
+    <string name="qrcode">二维码</string>
+    <string name="qrcode_desc">二维码生成和扫描</string>
+    <string name="text_tools">文本工具</string>
+    <string name="text_tools_desc">文本处理和格式化</string>
+    <string name="coming_soon">功能即将推出</string>
+</resources>
