@@ -45,9 +45,10 @@ jobs:
         distribution: 'temurin'
         
     - name: Setup Gradle
-      uses: gradle/gradle-build-action@v3
+      uses: gradle/actions/setup-gradle@v4
       with:
         gradle-home-cache-cleanup: true
+        cache-read-only: ${{ github.event_name == 'pull_request' }}
         
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
@@ -122,20 +123,14 @@ jobs:
       uses: gradle/actions/setup-gradle@v4
       with:
         gradle-home-cache-cleanup: true
+        cache-read-only: ${{ github.event_name == 'pull_request' }}
         
-    - name: Cache Gradle dependencies
-      uses: actions/cache@v4
-      with:
-        path: |
-          ~/.gradle/caches
-          ~/.gradle/wrapper
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-        restore-keys: |
-          ${{ runner.os }}-gradle-
-          
     - name: Make gradlew executable
       run: chmod +x ./gradlew
 
+    - name: Validate Gradle wrapper
+      uses: gradle/actions/wrapper-validation@v4
+      
     - name: Get version info
       id: version
       run: |

@@ -1,67 +1,38 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+# Performance optimization rules for ProGuard/R8
+# This file contains rules to optimize app performance while maintaining functionality
 
-# ================================
-# OPTIMIZATION SETTINGS
-# ================================
+# Keep application class
+-keep public class * extends android.app.Application
 
-# Enable aggressive optimization
--optimizations !code/simplification/arithmetic,!code/simplification/cast,!field/*,!class/merging/*
--optimizationpasses 5
--allowaccessmodification
--dontpreverify
+# Keep all classes that extend Activity, Service, BroadcastReceiver, ContentProvider
+-keep public class * extends android.app.Activity
+-keep public class * extends android.app.Service
+-keep public class * extends android.content.BroadcastReceiver
+-keep public class * extends android.content.ContentProvider
 
-# ================================
-# DEBUGGING & CRASH REPORTING
-# ================================
+# Keep all View constructors
+-keepclasseswithmembers class * {
+    public <init>(android.content.Context, android.util.AttributeSet);
+}
+-keepclasseswithmembers class * {
+    public <init>(android.content.Context, android.util.AttributeSet, int);
+}
 
-# Keep line numbers for crash reports
--keepattributes SourceFile,LineNumberTable
+# Keep Parcelable implementations
+-keep class * implements android.os.Parcelable {
+    public static final android.os.Parcelable$Creator *;
+}
 
-# Hide original source file name for security
--renamesourcefileattribute SourceFile
-
-# Keep stack trace information
--keepattributes Exceptions
-
-# ================================
-# ANDROID & ANDROIDX
-# ================================
-
-# Keep Compose related classes (more specific rules)
--keep class androidx.compose.runtime.** { *; }
--keep class androidx.compose.ui.** { *; }
--keep class androidx.compose.foundation.** { *; }
--keep class androidx.compose.material3.** { *; }
--keep class androidx.compose.animation.** { *; }
-
-# Keep Navigation Compose
--keep class androidx.navigation.** { *; }
--keepclassmembers class androidx.navigation.** { *; }
-
-# Keep ViewModel and Lifecycle
--keep class androidx.lifecycle.** { *; }
--keep class * extends androidx.lifecycle.ViewModel { *; }
--keep class * extends androidx.lifecycle.AndroidViewModel { *; }
-
-# Keep Activity and Fragment
--keep class * extends androidx.activity.ComponentActivity { *; }
--keep class * extends androidx.fragment.app.Fragment { *; }
-
-# ================================
-# APPLICATION SPECIFIC
-# ================================
-
-# Keep application classes (more specific)
--keep class cn.lemwood.lemwoodtools.** { *; }
-
-# Keep data classes and models
--keep class cn.lemwood.lemwoodtools.data.model.** { *; }
--keep class cn.lemwood.lemwoodtools.domain.model.** { *; }
+# Keep Serializable classes
+-keepnames class * implements java.io.Serializable
+-keepclassmembers class * implements java.io.Serializable {
+    static final long serialVersionUID;
+    private static final java.io.ObjectStreamField[] serialPersistentFields;
+    private void writeObject(java.io.ObjectOutputStream);
+    private void readObject(java.io.ObjectInputStream);
+    java.lang.Object writeReplace();
+    java.lang.Object readResolve();
+}
 
 # Keep enum classes
 -keepclassmembers enum * {
@@ -69,63 +40,46 @@
     public static ** valueOf(java.lang.String);
 }
 
-# ================================
-# KOTLIN & COROUTINES
-# ================================
-
-# Keep Kotlin metadata
+# Jetpack Compose specific rules
+-keep class androidx.compose.** { *; }
 -keep class kotlin.Metadata { *; }
--keep class kotlin.reflect.** { *; }
-
-# Coroutines
--keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
--keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
--keepclassmembers class kotlinx.coroutines.** {
-    volatile <fields>;
+-keepclassmembers class kotlin.Metadata {
+    public <methods>;
 }
 
-# ================================
-# SERIALIZATION
-# ================================
-
-# Kotlin serialization
--keepattributes *Annotation*, InnerClasses
--dontnote kotlinx.serialization.AnnotationsKt
--keep,includedescriptorclasses class cn.lemwood.lemwoodtools.**$$serializer { *; }
--keepclassmembers class cn.lemwood.lemwoodtools.** {
-    *** Companion;
+# Keep data classes used with Compose
+-keep @androidx.compose.runtime.Stable class * {
+    *;
 }
--keepclasseswithmembers class cn.lemwood.lemwoodtools.** {
-    kotlinx.serialization.KSerializer serializer(...);
+-keep @androidx.compose.runtime.Immutable class * {
+    *;
 }
 
-# ================================
-# NETWORKING (if using Retrofit/OkHttp)
-# ================================
-
-# Retrofit
--keepattributes Signature, InnerClasses, EnclosingMethod
--keepattributes RuntimeVisibleAnnotations, RuntimeVisibleParameterAnnotations
--keepattributes AnnotationDefault
--keepclassmembers,allowshrinking,allowobfuscation interface * {
-    @retrofit2.http.* <methods>;
+# Keep ViewModel classes
+-keep class * extends androidx.lifecycle.ViewModel {
+    <init>(...);
 }
--dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
--dontwarn javax.annotation.**
--dontwarn kotlin.Unit
--dontwarn retrofit2.KotlinExtensions
--dontwarn retrofit2.KotlinExtensions$*
 
-# OkHttp
--dontwarn okhttp3.**
--dontwarn okio.**
--dontwarn javax.annotation.**
+# Keep classes with @Keep annotation
+-keep @androidx.annotation.Keep class * {*;}
+-keep @androidx.annotation.Keep interface * {*;}
+-keepclasseswithmembers class * {
+    @androidx.annotation.Keep <methods>;
+}
+-keepclasseswithmembers class * {
+    @androidx.annotation.Keep <fields>;
+}
+-keepclasseswithmembers class * {
+    @androidx.annotation.Keep <init>(...);
+}
 
-# ================================
-# SECURITY & LOGGING
-# ================================
+# Optimization settings
+-optimizations !code/simplification/arithmetic,!code/simplification/cast,!field/*,!class/merging/*
+-optimizationpasses 5
+-allowaccessmodification
+-dontpreverify
 
-# Remove all logging in release builds
+# Remove logging in release builds
 -assumenosideeffects class android.util.Log {
     public static boolean isLoggable(java.lang.String, int);
     public static int v(...);
@@ -137,28 +91,66 @@
 
 # Remove debug code
 -assumenosideeffects class kotlin.jvm.internal.Intrinsics {
-    public static void checkNotNull(...);
-    public static void checkParameterIsNotNull(...);
-    public static void checkNotNullParameter(...);
-    public static void checkExpressionValueIsNotNull(...);
-    public static void checkNotNullExpressionValue(...);
-    public static void checkReturnedValueIsNotNull(...);
-    public static void checkFieldIsNotNull(...);
+    static void checkParameterIsNotNull(java.lang.Object, java.lang.String);
+    static void checkNotNullParameter(java.lang.Object, java.lang.String);
+    static void checkReturnedValueIsNotNull(java.lang.Object, java.lang.String);
+    static void checkReturnedValueIsNotNull(java.lang.Object, java.lang.String, java.lang.String);
+    static void checkFieldIsNotNull(java.lang.Object, java.lang.String);
+    static void checkFieldIsNotNull(java.lang.Object, java.lang.String, java.lang.String);
+    static void checkNotNull(java.lang.Object);
+    static void checkNotNull(java.lang.Object, java.lang.String);
+    static void checkNotNullExpressionValue(java.lang.Object, java.lang.String);
+    static void checkExpressionValueIsNotNull(java.lang.Object, java.lang.String);
+    static void throwUninitializedPropertyAccessException(java.lang.String);
 }
 
-# ================================
-# WEBVIEW (if used)
-# ================================
+# Keep line numbers for debugging crashes
+-keepattributes SourceFile,LineNumberTable
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# Keep generic signatures for reflection
+-keepattributes Signature
 
-# ================================
-# WARNINGS SUPPRESSION
-# ================================
+# Keep annotations
+-keepattributes *Annotation*
 
--dontwarn java.lang.invoke.StringConcatFactory
+# Crashlytics (if used)
+-keepattributes SourceFile,LineNumberTable
+-keep public class * extends java.lang.Exception
+
+# Gson/JSON serialization (if used)
+-keepattributes Signature
+-keepattributes *Annotation*
+-dontwarn sun.misc.**
+-keep class com.google.gson.** { *; }
+-keep class * implements com.google.gson.TypeAdapterFactory
+-keep class * implements com.google.gson.JsonSerializer
+-keep class * implements com.google.gson.JsonDeserializer
+
+# Retrofit (if used)
+-keepattributes Signature, InnerClasses, EnclosingMethod
+-keepattributes RuntimeVisibleAnnotations, RuntimeVisibleParameterAnnotations
+-keepclassmembers,allowshrinking,allowobfuscation interface * {
+    @retrofit2.http.* <methods>;
+}
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+-dontwarn kotlin.Unit
+-dontwarn retrofit2.KotlinExtensions
+-dontwarn retrofit2.KotlinExtensions$*
+
+# OkHttp (if used)
+-dontwarn okhttp3.**
+-dontwarn okio.**
+-dontwarn javax.annotation.**
+-keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
+
+# Room Database (if used)
+-keep class * extends androidx.room.RoomDatabase
+-dontwarn androidx.room.paging.**
+
+# Navigation Component
+-keepnames class androidx.navigation.fragment.NavHostFragment
+
+# WorkManager (if used)
+-keep class * extends androidx.work.Worker
+-keep class * extends androidx.work.InputMerger
+-keep class androidx.work.impl.background.systemalarm.RescheduleReceiver

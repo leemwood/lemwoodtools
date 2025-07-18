@@ -39,16 +39,28 @@ lemwoodtools/
 │   │   │   └── ui/theme/         # UI主题
 │   │   └── res/                  # 资源文件
 │   ├── build.gradle              # 应用构建配置
-│   └── proguard-rules.pro        # 代码混淆规则
+│   └── proguard-rules.pro        # 代码混淆和性能优化规则
 ├── .github/
 │   ├── workflows/
-│   │   └── android.yml           # CI/CD工作流
+│   │   ├── android.yml           # CI/CD工作流
+│   │   └── code-quality.yml      # 代码质量检查工作流
+│   ├── dependabot.yml            # 依赖自动更新配置
 │   └── SECRETS.md                # Secrets配置说明
+├── scripts/
+│   ├── parse-test-results.sh     # 测试结果解析脚本(Linux/macOS)
+│   ├── parse-test-results.ps1    # 测试结果解析脚本(Windows)
+│   ├── test-parsing.sh           # 脚本测试工具
+│   └── README.md                 # 脚本使用说明
 ├── build.gradle                  # 项目构建配置
 ├── settings.gradle               # 项目设置
-├── gradle.properties             # Gradle属性
+├── gradle.properties             # Gradle属性和性能优化
+├── detekt.yml                    # Detekt静态分析配置
+├── dependency-check-suppressions.xml # 依赖安全扫描抑制规则
+├── .editorconfig                 # 编辑器配置
 ├── build.sh                      # Linux/macOS构建脚本
 ├── build.bat                     # Windows构建脚本
+├── CODE_QUALITY.md               # 代码质量和维护性指南
+├── CICD.md                       # CI/CD详细说明
 └── README.md                     # 项目说明
 ```
 
@@ -133,9 +145,22 @@ adb install app/build/outputs/apk/release/app-release.apk
 ### 构建状态
 [![Android CI/CD](https://github.com/username/lemwoodtools/actions/workflows/android.yml/badge.svg)](https://github.com/username/lemwoodtools/actions/workflows/android.yml)
 
-## 📊 代码质量
+## 📊 代码质量与维护性
 
-### 代码检查
+本项目集成了多种代码质量工具和最佳实践，确保代码的高质量和可维护性。
+
+### 🔍 静态代码分析
+
+#### Detekt - Kotlin静态分析
+```bash
+# 运行Detekt检查
+./gradlew detekt
+
+# 查看Detekt报告
+open app/build/reports/detekt/detekt.html
+```
+
+#### Android Lint - Android特定检查
 ```bash
 # 运行Lint检查
 ./gradlew lintDebug
@@ -144,7 +169,18 @@ adb install app/build/outputs/apk/release/app-release.apk
 open app/build/reports/lint-results-debug.html
 ```
 
-### 单元测试
+#### OWASP依赖安全扫描
+```bash
+# 运行依赖安全检查
+./gradlew dependencyCheckAnalyze
+
+# 查看安全报告
+open app/build/reports/dependency-check-report.html
+```
+
+### 🧪 测试与覆盖率
+
+#### 单元测试
 ```bash
 # 运行单元测试
 ./gradlew testDebugUnitTest
@@ -153,11 +189,43 @@ open app/build/reports/lint-results-debug.html
 open app/build/reports/tests/testDebugUnitTest/index.html
 ```
 
-### 代码覆盖率
+#### 代码覆盖率
 ```bash
 # 生成测试覆盖率报告
 ./gradlew testDebugUnitTestCoverage
+
+# 查看覆盖率报告
+open app/build/reports/coverage/test/debug/index.html
 ```
+
+### 🚀 一键代码质量检查
+```bash
+# 运行所有代码质量检查
+./gradlew codeQuality
+```
+
+### 📈 质量度量目标
+- **代码覆盖率**: > 80%
+- **Detekt问题**: < 10个
+- **Lint错误**: 0个
+- **安全漏洞**: 0个高危漏洞
+
+### 🛠️ 自动化工具
+
+#### GitHub Actions工作流
+- **代码质量检查**: `.github/workflows/code-quality.yml`
+- **CI/CD流水线**: `.github/workflows/android.yml`
+- **依赖更新**: Dependabot配置
+
+#### 开发工具配置
+- **EditorConfig**: `.editorconfig` - 统一代码格式
+- **Detekt配置**: `detekt.yml` - 自定义检查规则
+- **ProGuard规则**: `app/proguard-rules.pro` - 性能优化
+
+### 📚 质量文档
+- **详细指南**: [CODE_QUALITY.md](CODE_QUALITY.md)
+- **CI/CD说明**: [CICD.md](CICD.md)
+- **脚本文档**: [scripts/README.md](scripts/README.md)
 
 ## 🎨 设计规范
 

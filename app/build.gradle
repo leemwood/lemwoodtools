@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'io.gitlab.arturbosch.detekt' version '1.23.4'
+    id 'org.owasp.dependencycheck' version '9.0.9'
 }
 
 android {
@@ -183,4 +185,63 @@ dependencies {
     // Debug tools
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
+}
+
+// Detekt configuration
+detekt {
+    config.setFrom("$rootDir/detekt.yml")
+    buildUponDefaultConfig = true
+    allRules = false
+    
+    reports {
+        html.required = true
+        xml.required = true
+        txt.required = true
+        sarif.required = true
+        md.required = false
+    }
+}
+
+// Dependency Check configuration
+dependencyCheck {
+    outputDirectory = "$buildDir/reports"
+    format = 'ALL'
+    suppressionFile = "$rootDir/dependency-check-suppressions.xml"
+    
+    analyzers {
+        experimentalEnabled = true
+        archiveEnabled = true
+        jarEnabled = true
+        centralEnabled = true
+        nexusEnabled = false
+        pyDistributionEnabled = false
+        pyPackageEnabled = false
+        rubygemsEnabled = false
+        opensslEnabled = false
+        cmakeEnabled = false
+        autoconfEnabled = false
+        composerEnabled = false
+        nodeEnabled = false
+        nodeAuditEnabled = false
+        retirejs {
+            enabled = false
+        }
+    }
+    
+    nvd {
+        apiKey = System.getenv('NVD_API_KEY') ?: ''
+        delay = 16000
+    }
+}
+
+// Custom tasks for code quality
+tasks.register('codeQuality') {
+    dependsOn 'detekt', 'lintDebug', 'dependencyCheckAnalyze'
+    group = 'verification'
+    description = 'Run all code quality checks'
+}
+
+// Make check task depend on our code quality checks
+tasks.named('check') {
+    dependsOn 'codeQuality'
 }
