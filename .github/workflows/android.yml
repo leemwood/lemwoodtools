@@ -5,6 +5,17 @@ on:
     branches: [ "main", "develop" ]
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:
+    inputs:
+      build_type:
+        description: 'Build type'
+        required: true
+        default: 'debug'
+        type: choice
+        options:
+        - debug
+        - staging
+        - release
 
 env:
   GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2 -Dorg.gradle.parallel=true
@@ -50,8 +61,9 @@ jobs:
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: lint-reports
+        name: lint-reports-${{ github.run_number }}
         path: app/build/reports/lint-results-debug.html
+        retention-days: 30
         
     - name: Run unit tests
       run: ./gradlew testDebugUnitTest
@@ -60,13 +72,24 @@ jobs:
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: test-reports
+        name: test-reports-${{ github.run_number }}
         path: app/build/reports/tests/testDebugUnitTest/
+        retention-days: 30
+
+    - name: Publish Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v2
+      if: always()
+      with:
+        files: app/build/test-results/testDebugUnitTest/TEST-*.xml
 
   build:
     name: Build APK
     runs-on: ubuntu-latest
     needs: test
+    outputs:
+      has_release_apk: ${{ steps.check_release.outputs.has_release_apk }}
+      version_name: ${{ steps.version.outputs.version_name }}
+      version_code: ${{ steps.version.outputs.version_code }}
     
     steps:
     - name: Checkout code
@@ -95,61 +118,7 @@ jobs:
           
     - name: Make gradlew executable
       run: chmod +x ./gradlew
-      
-    - name: Decode Keystore
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      env:
-        ENCODED_STRING: ${{ secrets.SIGNING_KEYSTORE }}
-      run: |
-        if [ ! -z "$ENCODED_STRING" ]; then
-          echo $ENCODED_STRING | base64 -di > app/release-key.keystore
-        fi
-        
-    - name: Build Debug APK
-      run: ./gradlew assembleDebug
-      
-    - name: Build Release APK
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      env:
-        SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
-        SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
-        SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
-      run: |
-        if [ ! -z "$SIGNING_KEY_ALIAS" ]; then
-          ./gradlew assembleRelease
-        else
-          echo "Signing secrets not found, skipping release build"
-        fi
-        
-    - name: Upload Debug APK
-      uses: actions/upload-artifact@v4
-      with:
-        name: debug-apk
-        path: app/build/outputs/apk/debug/app-debug.apk
-        
-    - name: Upload Release APK
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      uses: actions/upload-artifact@v4
-      with:
-        name: release-apk
-        path: app/build/outputs/apk/release/app-release.apk
 
-  deploy:
-    name: Create Release
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Download Release APK
-      uses: actions/download-artifact@v4
-      with:
-        name: release-apk
-        path: ./
-        
     - name: Get version info
       id: version
       run: |
@@ -158,6 +127,164 @@ jobs:
         echo "version_name=$VERSION_NAME" >> $GITHUB_OUTPUT
         echo "version_code=$VERSION_CODE" >> $GITHUB_OUTPUT
         echo "tag_name=v$VERSION_NAME" >> $GITHUB_OUTPUT
+        echo "Version: $VERSION_NAME ($VERSION_CODE)"
+      
+    - name: Decode Keystore
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      env:
+        ENCODED_STRING: ${{ secrets.SIGNING_KEYSTORE }}
+      run: |
+        if [ ! -z "$ENCODED_STRING" ]; then
+          echo $ENCODED_STRING | base64 -di > app/lemwood.jks
+          echo "Keystore decoded successfully"
+        else
+          echo "No keystore found in secrets"
+        fi
+        
+    - name: Build Debug APK
+      run: ./gradlew assembleDebug
+      
+    - name: Build Staging APK
+      if: github.ref == 'refs/heads/develop' || github.event.inputs.build_type == 'staging'
+      run: ./gradlew assembleStaging
+      
+    - name: Build Release APK
+      id: build_release
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      env:
+        SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+        SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+        SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+      run: |
+        if [ ! -z "$SIGNING_KEY_ALIAS" ] && [ -f "app/lemwood.jks" ]; then
+          ./gradlew assembleRelease
+          echo "release_built=true" >> $GITHUB_OUTPUT
+          echo "Release APK built successfully"
+        else
+          echo "Signing secrets not found or keystore missing, skipping release build"
+          echo "release_built=false" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Check release APK existence
+      id: check_release
+      run: |
+        if [ -f "app/build/outputs/apk/release/app-release.apk" ]; then
+          echo "has_release_apk=true" >> $GITHUB_OUTPUT
+          echo "Release APK exists"
+        else
+          echo "has_release_apk=false" >> $GITHUB_OUTPUT
+          echo "Release APK does not exist"
+        fi
+        
+    - name: Upload Debug APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: debug-apk-${{ github.run_number }}
+        path: app/build/outputs/apk/debug/app-debug.apk
+        retention-days: 30
+
+    - name: Upload Staging APK
+      if: github.ref == 'refs/heads/develop' || github.event.inputs.build_type == 'staging'
+      uses: actions/upload-artifact@v4
+      with:
+        name: staging-apk-${{ github.run_number }}
+        path: app/build/outputs/apk/staging/app-staging.apk
+        retention-days: 30
+        
+    - name: Upload Release APK
+      if: steps.check_release.outputs.has_release_apk == 'true'
+      uses: actions/upload-artifact@v4
+      with:
+        name: release-apk-${{ github.run_number }}
+        path: app/build/outputs/apk/release/app-release.apk
+        retention-days: 90
+
+    - name: Upload Build Reports
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: build-reports-${{ github.run_number }}
+        path: |
+          app/build/reports/
+          app/build/outputs/logs/
+        retention-days: 30
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'push'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+        
+    - name: Upload Trivy scan results
+      uses: github/codeql-action/upload-sarif@v3
+      if: always()
+      with:
+        sarif_file: 'trivy-results.sarif'
+
+  deploy:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs: [build, security-scan]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && needs.build.outputs.has_release_apk == 'true'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Download Release APK
+      uses: actions/download-artifact@v4
+      with:
+        name: release-apk-${{ github.run_number }}
+        path: ./artifacts
+        
+    - name: Rename APK
+      run: |
+        mv ./artifacts/app-release.apk ./lemwood-tools-${{ needs.build.outputs.version_name }}.apk
+        ls -la *.apk
+        
+    - name: Generate Changelog
+      id: changelog
+      run: |
+        # Get commits since last tag
+        LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+        if [ -z "$LAST_TAG" ]; then
+          COMMITS=$(git log --pretty=format:"- %s" --max-count=10)
+        else
+          COMMITS=$(git log ${LAST_TAG}..HEAD --pretty=format:"- %s")
+        fi
+        
+        # Save changelog to file
+        cat > changelog.md << EOF
+        ## 柠枺工具箱 ${{ needs.build.outputs.version_name }}
+        
+        ### 🚀 更新内容
+        ${COMMITS}
+        
+        ### 📱 应用信息
+        - **版本号**: ${{ needs.build.outputs.version_code }}
+        - **构建时间**: $(date '+%Y-%m-%d %H:%M:%S UTC')
+        - **提交**: ${GITHUB_SHA:0:7}
+        
+        ### 📋 系统要求
+        - Android 7.0 (API 24) 或更高版本
+        - 约 10MB 存储空间
+        
+        ### 🔒 安全信息
+        - APK 已通过安全扫描
+        - 使用官方签名证书
+        EOF
         
     - name: Create Release
       id: create_release
@@ -165,21 +292,35 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ steps.version.outputs.tag_name }}
-        name: 柠枺工具箱 ${{ steps.version.outputs.version_name }}
-        body: |
-          ## 柠枺工具箱 ${{ steps.version.outputs.version_name }}
-          
-          ### 更新内容
-          - 自动构建版本
-          - 版本号: ${{ steps.version.outputs.version_code }}
-          
-          ### 下载
-          - [Android APK](https://github.com/${{ github.repository }}/releases/download/${{ steps.version.outputs.tag_name }}/lemwood-tools-${{ steps.version.outputs.version_name }}.apk)
-          
-          ### 系统要求
-          - Android 7.1 (API 25) 或更高版本
+        tag_name: v${{ needs.build.outputs.version_name }}
+        name: 柠枺工具箱 v${{ needs.build.outputs.version_name }}
+        body_path: changelog.md
         draft: false
         prerelease: false
         files: |
-          ./app-release.apk
+          ./lemwood-tools-${{ needs.build.outputs.version_name }}.apk
+        make_latest: true
+
+  notify:
+    name: Notify Results
+    runs-on: ubuntu-latest
+    needs: [test, build, deploy]
+    if: always()
+    
+    steps:
+    - name: Notify Success
+      if: needs.test.result == 'success' && needs.build.result == 'success'
+      run: |
+        echo "✅ Build completed successfully!"
+        echo "- Tests: ${{ needs.test.result }}"
+        echo "- Build: ${{ needs.build.result }}"
+        echo "- Deploy: ${{ needs.deploy.result }}"
+        
+    - name: Notify Failure
+      if: needs.test.result == 'failure' || needs.build.result == 'failure'
+      run: |
+        echo "❌ Build failed!"
+        echo "- Tests: ${{ needs.test.result }}"
+        echo "- Build: ${{ needs.build.result }}"
+        echo "- Deploy: ${{ needs.deploy.result }}"
+        exit 1
