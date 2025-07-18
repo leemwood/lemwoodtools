@@ -3,17 +3,42 @@
     <!-- Base application theme. -->
     <style name="Theme.LemwoodTools" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
+        <!-- Primary colors -->
         <item name="colorPrimary">@color/lemwood_primary</item>
-        <item name="colorPrimaryVariant">@color/lemwood_primary_variant</item>
-        <item name="colorSecondary">@color/lemwood_secondary</item>
-        <item name="colorSecondaryVariant">@color/lemwood_secondary_variant</item>
-        <item name="android:colorBackground">@color/lemwood_background</item>
-        <item name="colorSurface">@color/lemwood_surface</item>
-        <item name="colorError">@color/lemwood_error</item>
         <item name="colorOnPrimary">@color/lemwood_on_primary</item>
+        <item name="colorPrimaryContainer">@color/lemwood_primary_container</item>
+        <item name="colorOnPrimaryContainer">@color/lemwood_on_primary_container</item>
+        
+        <!-- Secondary colors -->
+        <item name="colorSecondary">@color/lemwood_secondary</item>
         <item name="colorOnSecondary">@color/lemwood_on_secondary</item>
-        <item name="colorOnBackground">@color/lemwood_on_background</item>
-        <item name="colorOnSurface">@color/lemwood_on_surface</item>
+        <item name="colorSecondaryContainer">@color/lemwood_secondary_container</item>
+        <item name="colorOnSecondaryContainer">@color/lemwood_on_secondary_container</item>
+        
+        <!-- Tertiary colors -->
+        <item name="colorTertiary">@color/lemwood_tertiary</item>
+        <item name="colorOnTertiary">@color/lemwood_on_tertiary</item>
+        <item name="colorTertiaryContainer">@color/lemwood_tertiary_container</item>
+        <item name="colorOnTertiaryContainer">@color/lemwood_on_tertiary_container</item>
+        
+        <!-- Error colors -->
+        <item name="colorError">@color/lemwood_error</item>
         <item name="colorOnError">@color/lemwood_on_error</item>
+        <item name="colorErrorContainer">@color/lemwood_error_container</item>
+        <item name="colorOnErrorContainer">@color/lemwood_on_error_container</item>
+        
+        <!-- Background colors -->
+        <item name="android:colorBackground">@color/lemwood_background</item>
+        <item name="colorOnBackground">@color/lemwood_on_background</item>
+        
+        <!-- Surface colors -->
+        <item name="colorSurface">@color/lemwood_surface</item>
+        <item name="colorOnSurface">@color/lemwood_on_surface</item>
+        <item name="colorSurfaceVariant">@color/lemwood_surface_variant</item>
+        <item name="colorOnSurfaceVariant">@color/lemwood_on_surface_variant</item>
+        
+        <!-- Outline colors -->
+        <item name="colorOutline">@color/lemwood_outline</item>
+        <item name="colorOutlineVariant">@color/lemwood_outline_variant</item>
     </style>
 </resources>
