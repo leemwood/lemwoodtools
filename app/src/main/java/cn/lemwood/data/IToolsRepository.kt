@@ -1,27 +1,5 @@
 package cn.lemwood.data
 
-import androidx.compose.ui.graphics.vector.ImageVector
-
-/**
- * 工具项数据类
- * @param id 工具唯一标识符
- * @param title 工具标题
- * @param description 工具描述
- * @param icon 工具图标
- * @param route 导航路由
- * @param category 工具分类
- * @param keywords 搜索关键词列表
- */
-data class ToolItem(
-    val id: String,
-    val title: String,
-    val description: String,
-    val icon: ImageVector,
-    val route: String,
-    val category: String = "通用",
-    val keywords: List<String> = emptyList()
-)
-
 /**
  * 工具仓库接口
  * 定义了工具数据访问的标准接口

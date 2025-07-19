@@ -38,7 +38,7 @@ object Constants {
     
     // 文件相关
     const val MAX_FILE_SIZE = 5 * 1024 * 1024L // 5MB
-    const val ALLOWED_IMAGE_TYPES = arrayOf("jpg", "jpeg", "png", "gif", "webp")
+    val ALLOWED_IMAGE_TYPES = arrayOf("jpg", "jpeg", "png", "gif", "webp")
     
     // 数据库相关
     const val DATABASE_NAME = "lemwood_tools.db"

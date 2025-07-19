@@ -60,7 +60,7 @@ object ErrorHandler {
      */
     inline fun <T> safeExecute(
         action: () -> T,
-        onError: ((Throwable) -> T)? = null
+        noinline onError: ((Throwable) -> T)? = null
     ): T? {
         return try {
             action()
@@ -75,9 +75,9 @@ object ErrorHandler {
      * @param action 要执行的挂起函数
      * @param onError 错误处理回调（可选）
      */
-    suspend inline fun <T> safeExecuteSuspend(
-        crossinline action: suspend () -> T,
-        crossinline onError: (suspend (Throwable) -> T)? = null
+    suspend fun <T> safeExecuteSuspend(
+        action: suspend () -> T,
+        onError: (suspend (Throwable) -> T)? = null
     ): T? {
         return try {
             action()
