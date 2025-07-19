@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import cn.lemwood.data.ToolItem
+import cn.lemwood.utils.CategoryHelper
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,7 +61,7 @@ fun ToolCard(
                         onClick = { },
                         label = { 
                             Text(
-                                tool.category,
+                                CategoryHelper.getLocalizedCategoryName(tool.category),
                                 style = MaterialTheme.typography.labelSmall
                             ) 
                         },

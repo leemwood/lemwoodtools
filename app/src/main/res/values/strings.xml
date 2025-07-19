@@ -72,16 +72,47 @@
     <string name="about">关于</string>
     <string name="version">版本</string>
     
-    <!-- 分类 -->
-    <string name="all_tools">所有工具</string>
-    <string name="featured_tools">推荐工具</string>
+    <!-- 分类相关 -->
+    <string name="category_all">全部</string>
+    <string name="category_math">数学计算</string>
+    <string name="category_conversion">单位转换</string>
+    <string name="category_tools">实用工具</string>
+    <string name="category_text">文本处理</string>
+    <string name="category_design">设计工具</string>
+    <string name="category_time">时间工具</string>
+    <string name="category_life">生活服务</string>
+    <string name="category_productivity">效率工具</string>
+    
+    <!-- 界面相关 -->
     <string name="filter">筛选</string>
     <string name="select_category">选择分类</string>
-    <string name="category_calculation">计算</string>
-    <string name="category_conversion">转换</string>
-    <string name="category_text">文本</string>
-    <string name="category_utility">实用工具</string>
-    <string name="category_general">通用</string>
+    <string name="close">关闭</string>
+    <string name="clear">清除</string>
+    
+    <!-- 设置相关 -->
+    <string name="appearance">外观</string>
+    <string name="dark_theme">深色主题</string>
+    <string name="dark_theme_desc">切换应用主题颜色</string>
+    <string name="notifications">通知</string>
+    <string name="push_notifications">推送通知</string>
+    <string name="push_notifications_desc">接收重要更新和提醒</string>
+    <string name="interaction">交互</string>
+    <string name="haptic_feedback">触觉反馈</string>
+    <string name="haptic_feedback_desc">按钮点击时的震动反馈</string>
+    <string name="about">关于</string>
+    <string name="version">版本</string>
+    <string name="developer">开发者</string>
+    <string name="clear_cache">清除缓存</string>
+    <string name="feedback">意见反馈</string>
+    
+    <!-- 搜索相关 -->
+    <string name="search_tools">搜索工具</string>
+    <string name="search_placeholder">输入关键词搜索工具</string>
+    <string name="search">搜索</string>
+    <string name="search_hint">输入关键词搜索您需要的工具</string>
+    <string name="no_results">未找到相关工具</string>
+    <string name="try_different_keywords">请尝试使用不同的关键词</string>
+    <string name="search_results_count">找到 %d 个相关工具</string>
     
     <!-- 通用 -->
     <string name="app_stats">应用统计</string>

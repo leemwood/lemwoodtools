@@ -35,6 +35,48 @@
     <string name="filter">Filter</string>
     <string name="select_category">Select Category</string>
     
+    <!-- Category related -->
+    <string name="category_all">All</string>
+    <string name="category_math">Math</string>
+    <string name="category_conversion">Conversion</string>
+    <string name="category_tools">Tools</string>
+    <string name="category_text">Text</string>
+    <string name="category_design">Design</string>
+    <string name="category_time">Time</string>
+    <string name="category_life">Life</string>
+    <string name="category_productivity">Productivity</string>
+    
+    <!-- UI related -->
+    <string name="filter">Filter</string>
+    <string name="select_category">Select Category</string>
+    <string name="close">Close</string>
+    <string name="clear">Clear</string>
+    
+    <!-- Settings related -->
+    <string name="appearance">Appearance</string>
+    <string name="dark_theme">Dark Theme</string>
+    <string name="dark_theme_desc">Switch app theme color</string>
+    <string name="notifications">Notifications</string>
+    <string name="push_notifications">Push Notifications</string>
+    <string name="push_notifications_desc">Receive important updates and reminders</string>
+    <string name="interaction">Interaction</string>
+    <string name="haptic_feedback">Haptic Feedback</string>
+    <string name="haptic_feedback_desc">Vibration feedback when buttons are clicked</string>
+    <string name="about">About</string>
+    <string name="version">Version</string>
+    <string name="developer">Developer</string>
+    <string name="clear_cache">Clear Cache</string>
+    <string name="feedback">Feedback</string>
+    
+    <!-- Search related -->
+    <string name="search_tools">Search Tools</string>
+    <string name="search_placeholder">Enter keywords to search tools</string>
+    <string name="search">Search</string>
+    <string name="search_hint">Enter keywords to search for the tools you need</string>
+    <string name="no_results">No related tools found</string>
+    <string name="try_different_keywords">Please try using different keywords</string>
+    <string name="search_results_count">Found %d related tools</string>
+    
     <!-- Tool Names -->
     <string name="tool_calculator">Calculator</string>
     <string name="tool_converter">Unit Converter</string>

@@ -16,18 +16,28 @@ import androidx.navigation.NavController
 import cn.lemwood.R
 import cn.lemwood.data.ToolsRepository
 import cn.lemwood.ui.components.ToolCard
+import cn.lemwood.utils.CategoryHelper
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ToolsScreen(navController: NavController) {
-    var selectedCategory by remember { mutableStateOf("全部") }
+    val allCategoryText = stringResource(R.string.category_all)
+    var selectedCategoryKey by remember { mutableStateOf("") } // 使用空字符串表示"全部"
     var showFilterDialog by remember { mutableStateOf(false) }
     
-    val categories = listOf("全部") + ToolsRepository.getToolsByCategory().keys.toList()
-    val filteredTools = if (selectedCategory == "全部") {
+    val categoryMap = CategoryHelper.getCategoryMap()
+    val categories = listOf("" to allCategoryText) + categoryMap.toList()
+    
+    val filteredTools = if (selectedCategoryKey.isEmpty()) {
         ToolsRepository.getAllTools()
     } else {
-        ToolsRepository.getToolsByCategory()[selectedCategory] ?: emptyList()
+        ToolsRepository.getToolsByCategory()[selectedCategoryKey] ?: emptyList()
+    }
+    
+    val selectedCategoryDisplayName = if (selectedCategoryKey.isEmpty()) {
+        allCategoryText
+    } else {
+        CategoryHelper.getLocalizedCategoryName(selectedCategoryKey)
     }
     
     Column(
@@ -49,8 +59,8 @@ fun ToolsScreen(navController: NavController) {
             
             FilterChip(
                 onClick = { showFilterDialog = true },
-                label = { Text(selectedCategory) },
-                selected = selectedCategory != "全部",
+                label = { Text(selectedCategoryDisplayName) },
+                selected = selectedCategoryKey.isNotEmpty(),
                 leadingIcon = {
                     Icon(
                         Icons.Default.FilterList,
@@ -82,7 +92,7 @@ fun ToolsScreen(navController: NavController) {
             title = { Text(stringResource(R.string.select_category)) },
             text = {
                 LazyColumn {
-                    items(categories) { category ->
+                    items(categories) { (categoryKey, categoryName) ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -90,14 +100,14 @@ fun ToolsScreen(navController: NavController) {
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             RadioButton(
-                                selected = selectedCategory == category,
+                                selected = selectedCategoryKey == categoryKey,
                                 onClick = {
-                                    selectedCategory = category
+                                    selectedCategoryKey = categoryKey
                                     showFilterDialog = false
                                 }
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text(category)
+                            Text(categoryName)
                         }
                     }
                 }

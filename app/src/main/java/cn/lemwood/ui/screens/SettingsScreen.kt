@@ -96,7 +96,7 @@ fun SettingsScreen(navController: NavController) {
                     modifier = Modifier.padding(16.dp)
                 ) {
                     Text(
-                        "外观",
+                        stringResource(R.string.appearance),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.primary
@@ -110,11 +110,11 @@ fun SettingsScreen(navController: NavController) {
                     ) {
                         Column {
                             Text(
-                                "深色主题",
+                                stringResource(R.string.dark_theme),
                                 style = MaterialTheme.typography.bodyLarge
                             )
                             Text(
-                                "切换应用主题颜色",
+                                stringResource(R.string.dark_theme_desc),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -137,7 +137,7 @@ fun SettingsScreen(navController: NavController) {
                     modifier = Modifier.padding(16.dp)
                 ) {
                     Text(
-                        "通知",
+                        stringResource(R.string.notifications),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.primary
@@ -151,11 +151,11 @@ fun SettingsScreen(navController: NavController) {
                     ) {
                         Column {
                             Text(
-                                "推送通知",
+                                stringResource(R.string.push_notifications),
                                 style = MaterialTheme.typography.bodyLarge
                             )
                             Text(
-                                "接收应用通知",
+                                stringResource(R.string.push_notifications_desc),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -178,7 +178,7 @@ fun SettingsScreen(navController: NavController) {
                     modifier = Modifier.padding(16.dp)
                 ) {
                     Text(
-                        "交互",
+                        stringResource(R.string.interaction),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.primary
@@ -192,11 +192,11 @@ fun SettingsScreen(navController: NavController) {
                     ) {
                         Column {
                             Text(
-                                "触觉反馈",
+                                stringResource(R.string.haptic_feedback),
                                 style = MaterialTheme.typography.bodyLarge
                             )
                             Text(
-                                "按钮点击时的震动反馈",
+                                stringResource(R.string.haptic_feedback_desc),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -219,7 +219,7 @@ fun SettingsScreen(navController: NavController) {
                     modifier = Modifier.padding(16.dp)
                 ) {
                     Text(
-                        "关于",
+                        stringResource(R.string.about),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.primary
@@ -245,7 +245,7 @@ fun SettingsScreen(navController: NavController) {
                             )
                             Spacer(modifier = Modifier.width(12.dp))
                             Text(
-                                "版本",
+                                stringResource(R.string.version),
                                 style = MaterialTheme.typography.bodyLarge
                             )
                         }
@@ -277,7 +277,7 @@ fun SettingsScreen(navController: NavController) {
                             )
                             Spacer(modifier = Modifier.width(12.dp))
                             Text(
-                                "开发者",
+                                stringResource(R.string.developer),
                                 style = MaterialTheme.typography.bodyLarge
                             )
                         }
@@ -306,7 +306,7 @@ fun SettingsScreen(navController: NavController) {
                         modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("清除缓存")
+                    Text(stringResource(R.string.clear_cache))
                 }
                 
                 OutlinedButton(
@@ -319,7 +319,7 @@ fun SettingsScreen(navController: NavController) {
                         modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("意见反馈")
+                    Text(stringResource(R.string.feedback))
                 }
             }
         }

@@ -26,7 +26,7 @@ object ToolsRepository : IToolsRepository {
             description = "科学计算器和基础计算",
             icon = Icons.Default.Calculate,
             route = "calculator",
-            category = "数学",
+            category = "category_math",
             keywords = listOf("计算", "数学", "加减乘除", "科学计算")
         ),
         ToolItem(
@@ -35,7 +35,7 @@ object ToolsRepository : IToolsRepository {
             description = "长度、重量、温度等单位转换",
             icon = Icons.Default.SwapHoriz,
             route = "converter",
-            category = "转换",
+            category = "category_conversion",
             keywords = listOf("转换", "单位", "长度", "重量", "温度", "面积", "体积")
         ),
         ToolItem(
@@ -44,7 +44,7 @@ object ToolsRepository : IToolsRepository {
             description = "二维码生成和扫描",
             icon = Icons.Default.QrCode,
             route = "qrcode",
-            category = "工具",
+            category = "category_tools",
             keywords = listOf("二维码", "扫描", "生成", "条码", "QR")
         ),
         ToolItem(
@@ -53,7 +53,7 @@ object ToolsRepository : IToolsRepository {
             description = "文本处理和格式化",
             icon = Icons.Default.TextFields,
             route = "text_tools",
-            category = "文本",
+            category = "category_text",
             keywords = listOf("文本", "格式化", "编码", "解码", "大小写", "字符统计")
         ),
         ToolItem(
@@ -62,7 +62,7 @@ object ToolsRepository : IToolsRepository {
             description = "颜色选择和转换工具",
             icon = Icons.Default.Palette,
             route = "color_picker",
-            category = "设计",
+            category = "category_design",
             keywords = listOf("颜色", "色彩", "RGB", "HEX", "HSV", "调色板")
         ),
         ToolItem(
@@ -71,7 +71,7 @@ object ToolsRepository : IToolsRepository {
             description = "倒计时和秒表功能",
             icon = Icons.Default.Timer,
             route = "timer",
-            category = "时间",
+            category = "category_time",
             keywords = listOf("计时", "倒计时", "秒表", "提醒", "闹钟")
         ),
         ToolItem(
@@ -80,7 +80,7 @@ object ToolsRepository : IToolsRepository {
             description = "实时天气和天气预报",
             icon = Icons.Default.Cloud,
             route = "weather",
-            category = "生活",
+            category = "category_life",
             keywords = listOf("天气", "预报", "温度", "湿度", "风速", "气象")
         ),
         ToolItem(
@@ -89,7 +89,7 @@ object ToolsRepository : IToolsRepository {
             description = "简单的笔记记录工具",
             icon = Icons.Default.Note,
             route = "notes",
-            category = "效率",
+            category = "category_productivity",
             keywords = listOf("笔记", "记录", "备忘", "文档", "记事")
         )
     )
