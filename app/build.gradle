@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace 'cn.lemwood.lemwoodtools'
+    namespace 'cn.lemwood'
     compileSdk 34
 
     defaultConfig {
