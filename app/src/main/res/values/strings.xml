@@ -98,20 +98,11 @@
     <string name="interaction">交互</string>
     <string name="haptic_feedback">触觉反馈</string>
     <string name="haptic_feedback_desc">按钮点击时的震动反馈</string>
-    <string name="about">关于</string>
-    <string name="version">版本</string>
     <string name="developer">开发者</string>
     <string name="clear_cache">清除缓存</string>
     <string name="feedback">意见反馈</string>
     
     <!-- 搜索相关 -->
-    <string name="search_tools">搜索工具</string>
-    <string name="search_placeholder">输入关键词搜索工具</string>
-    <string name="search">搜索</string>
-    <string name="search_hint">输入关键词搜索您需要的工具</string>
-    <string name="no_results">未找到相关工具</string>
-    <string name="try_different_keywords">请尝试使用不同的关键词</string>
-    <string name="search_results_count">找到 %d 个相关工具</string>
     
     <!-- 通用 -->
     <string name="app_stats">应用统计</string>
@@ -125,7 +116,6 @@
     <string name="edit">编辑</string>
     <string name="copy">复制</string>
     <string name="share">分享</string>
-    <string name="close">关闭</string>
     <string name="back">返回</string>
     <string name="next">下一步</string>
     <string name="previous">上一步</string>

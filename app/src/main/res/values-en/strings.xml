@@ -47,8 +47,6 @@
     <string name="category_productivity">Productivity</string>
     
     <!-- UI related -->
-    <string name="select_category">Select Category</string>
-    <string name="close">Close</string>
     
     <!-- Settings related -->
     <string name="appearance">Appearance</string>
@@ -67,13 +65,6 @@
     <string name="feedback">Feedback</string>
     
     <!-- Search related -->
-    <string name="search_tools">Search Tools</string>
-    <string name="search_placeholder">Enter keywords to search tools</string>
-    <string name="search">Search</string>
-    <string name="search_hint">Enter keywords to search for the tools you need</string>
-    <string name="no_results">No related tools found</string>
-    <string name="try_different_keywords">Please try using different keywords</string>
-    <string name="search_results_count">Found %d related tools</string>
     
     <!-- Tool Names -->
     <string name="tool_calculator">Calculator</string>
