@@ -87,7 +87,6 @@
     <string name="filter">筛选</string>
     <string name="select_category">选择分类</string>
     <string name="close">关闭</string>
-    <string name="clear">清除</string>
     
     <!-- 设置相关 -->
     <string name="appearance">外观</string>
@@ -136,13 +135,13 @@
     <string name="warning">警告</string>
     <string name="info">信息</string>
     <string name="retry">重试</string>
+    
     <!-- 初始化界面 -->
     <string name="init_welcome_message">正在为您准备工具库，请稍候…</string>
     <string name="init_progress">正在进行第 %1$d 步，共 %2$d 步</string>
     <string name="init_completed">初始化完成！</string>
     <string name="init_error">初始化失败</string>
     <string name="init_error_message">初始化过程中出现错误，请重试</string>
-    <string name="retry">重试</string>
     
     <!-- 初始化步骤 -->
     <string name="init_step_language">语言设置</string>
