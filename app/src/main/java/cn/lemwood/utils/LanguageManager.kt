@@ -115,7 +115,7 @@ object LanguageManager {
  * Compose中获取当前语言的扩展函数
  */
 @Composable
-fun rememberCurrentLanguage(): Language {
+fun rememberCurrentLanguage(): LanguageManager.Language {
     val currentLanguage by LanguageManager.currentLanguage.collectAsState()
     return currentLanguage
 }
@@ -123,7 +123,7 @@ fun rememberCurrentLanguage(): Language {
 /**
  * 获取本地化字符串的扩展函数
  */
-fun Context.getLocalizedString(resId: Int, language: Language): String {
+fun Context.getLocalizedString(resId: Int, language: LanguageManager.Language): String {
     val localizedContext = LanguageManager.createLocalizedContext(this, language)
     return localizedContext.getString(resId)
 }
