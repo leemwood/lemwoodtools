@@ -11,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -21,15 +22,16 @@ import cn.lemwood.utils.InitializationManager
 
 @Composable
 fun InitializationScreen(
-    onInitializationComplete: () -> Unit
+    onInitializationComplete: () -> Unit = {}
 ) {
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
     val initState by InitializationManager.initializationState.collectAsState()
     
     // 启动初始化流程
     LaunchedEffect(Unit) {
         scope.launch {
-            InitializationManager.startInitialization(androidx.compose.ui.platform.LocalContext.current)
+            InitializationManager.startInitialization(context)
         }
     }
     
@@ -95,7 +97,7 @@ fun InitializationScreen(
                 onRetry = {
                     scope.launch {
                         InitializationManager.reset()
-                        InitializationManager.startInitialization(androidx.compose.ui.platform.LocalContext.current)
+                        InitializationManager.startInitialization(context)
                     }
                 }
             )

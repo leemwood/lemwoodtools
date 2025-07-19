@@ -96,22 +96,40 @@ fun LemwoodToolsApp() {
                 startDestination = Screen.Home.route,
                 modifier = Modifier.padding(innerPadding)
             ) {
-                composable(Screen.Home.route) { HomeScreen() }
-                composable(Screen.Tools.route) { ToolsScreen(navController) }
-                composable(Screen.Search.route) { SearchScreen(navController) }
-                composable(Screen.Settings.route) { SettingsScreen() }
+                composable(Screen.Home.route) { 
+                    HomeScreen(
+                        navController = navController
+                    ) 
+                }
+                composable(Screen.Tools.route) { 
+                    ToolsScreen(
+                        navController = navController
+                    ) 
+                }
+                composable(Screen.Search.route) { 
+                    SearchScreen(
+                        navController = navController
+                    ) 
+                }
+                composable(Screen.Settings.route) { 
+                    SettingsScreen(
+                        onLanguageChange = { language ->
+                            LanguageManager.setLanguage(context, language)
+                        },
+                        currentLanguage = currentLanguage
+                    ) 
+                }
                 
-                // 工具页面
-                composable("calculator") { CalculatorScreen() }
-                composable("unit_converter") { UnitConverterScreen() }
-                composable("qr_generator") { QRGeneratorScreen() }
-                composable("text_tools") { TextToolsScreen() }
-                composable("color_picker") { ColorPickerScreen() }
-                composable("timestamp_converter") { TimestampConverterScreen() }
-                composable("password_generator") { PasswordGeneratorScreen() }
-                composable("todo_list") { TodoListScreen() }
+                // 工具页面 - 使用占位符界面
+                composable("calculator") { PlaceholderScreen("计算器") }
+                composable("unit_converter") { PlaceholderScreen("单位转换器") }
+                composable("qr_generator") { PlaceholderScreen("二维码生成器") }
+                composable("text_tools") { PlaceholderScreen("文本工具") }
+                composable("color_picker") { PlaceholderScreen("颜色选择器") }
+                composable("timestamp_converter") { PlaceholderScreen("时间戳转换器") }
+                composable("password_generator") { PlaceholderScreen("密码生成器") }
+                composable("todo_list") { PlaceholderScreen("待办事项") }
             }
         }
-    }
     }
 }

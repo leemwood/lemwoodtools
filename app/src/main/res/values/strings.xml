@@ -12,6 +12,28 @@
     <string name="text_tools">文本工具</string>
     <string name="text_tools_desc">文本处理和格式化</string>
     
+    <!-- Tool Names -->
+    <string name="calculator">计算器</string>
+    <string name="unit_converter">单位转换器</string>
+    <string name="qr_generator">二维码生成器</string>
+    <string name="text_tools">文本工具</string>
+    <string name="color_picker">颜色选择器</string>
+    <string name="timestamp_converter">时间戳转换器</string>
+    <string name="password_generator">密码生成器</string>
+    <string name="todo_list">待办事项</string>
+    
+    <!-- Home Screen -->
+    <string name="featured_tools">精选工具</string>
+    <string name="all_tools">所有工具</string>
+    
+    <!-- Permissions -->
+    <string name="permission_storage">存储权限</string>
+    <string name="permission_storage_desc">用于保存和读取文件</string>
+    <string name="permission_camera">相机权限</string>
+    <string name="permission_camera_desc">用于扫描二维码和拍照</string>
+    <string name="permission_location">位置权限</string>
+    <string name="permission_location_desc">用于获取位置信息</string>
+    
     <!-- 工具名称 -->
     <string name="tool_calculator">计算器</string>
     <string name="tool_converter">单位转换</string>
@@ -44,6 +66,9 @@
     <string name="nav_settings">设置</string>
     <string name="search">搜索</string>
     <string name="settings">设置</string>
+    
+    <!-- Navigation -->
+    <string name="tools">工具</string>
     
     <!-- 搜索 -->
     <string name="search_tools">搜索工具</string>
