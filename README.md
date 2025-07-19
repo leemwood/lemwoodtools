@@ -104,6 +104,49 @@ build.bat
 ./gradlew assembleRelease
 ```
 
+## 🧪 测试
+
+### 运行测试
+```bash
+# 运行所有测试
+./gradlew test
+
+# 运行单元测试
+./gradlew testDebugUnitTest
+
+# 运行Lint检查
+./gradlew lintDebug
+
+# 生成测试覆盖率报告
+./gradlew jacocoTestReport
+```
+
+### 快速测试脚本
+```bash
+# Linux/macOS
+chmod +x test.sh
+./test.sh
+
+# Windows
+test.bat
+```
+
+### 测试报告
+测试完成后，可以在以下位置查看报告：
+- **Lint报告**: `app/build/reports/lint-results-debug.html`
+- **测试报告**: `app/build/reports/tests/testDebugUnitTest/index.html`
+- **覆盖率报告**: `app/build/reports/jacoco/jacocoTestReport/html/index.html`
+
+### 测试结构
+```
+app/src/test/java/cn/lemwood/
+├── ExampleUnitTest.kt          # 示例测试
+├── AppStartupTest.kt           # 应用启动测试
+└── data/
+    ├── ToolTest.kt             # 工具数据模型测试
+    └── ToolsRepositoryTest.kt  # 工具仓库测试
+```
+
 ### 安装到设备
 ```bash
 # 安装Debug版本
@@ -119,8 +162,15 @@ adb install app/build/outputs/apk/release/app-release.apk
 
 ### 构建流程
 - **触发条件**: push到main/develop分支，PR到main分支，手动触发
+- **测试阶段**: 自动运行Lint检查和单元测试
 - **构建类型**: Debug、Staging、Release
 - **自动发布**: main分支推送时自动创建GitHub Release
+
+### 工作流作业
+1. **test**: 运行Lint检查和单元测试
+2. **build**: 构建APK文件（依赖test作业成功）
+3. **deploy**: 创建GitHub Release（仅main分支）
+4. **notify**: 构建状态通知
 
 ### 工作流文件
 - `.github/workflows/android.yml` - 主要构建流程
