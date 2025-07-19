@@ -123,7 +123,7 @@ fun rememberCurrentLanguage(): Language {
 /**
  * 获取本地化字符串的扩展函数
  */
-fun Context.getLocalizedString(resId: Int, language: LanguageManager.Language): String {
+fun Context.getLocalizedString(resId: Int, language: Language): String {
     val localizedContext = LanguageManager.createLocalizedContext(this, language)
     return localizedContext.getString(resId)
 }
