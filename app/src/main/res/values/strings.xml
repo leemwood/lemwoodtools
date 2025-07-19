@@ -15,7 +15,6 @@
     <!-- Tool Names -->
     <string name="unit_converter">单位转换器</string>
     <string name="qr_generator">二维码生成器</string>
-    <string name="text_tools">文本工具</string>
     <string name="color_picker">颜色选择器</string>
     <string name="timestamp_converter">时间戳转换器</string>
     <string name="password_generator">密码生成器</string>

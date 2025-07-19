@@ -81,7 +81,6 @@
     <string name="todo_list">Todo List</string>
     
     <!-- Home Screen -->
-    <string name="all_tools">All Tools</string>
     
     <!-- Permissions -->
     <string name="permission_storage">Storage Permission</string>
