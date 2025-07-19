@@ -2,22 +2,33 @@ package cn.lemwood.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import cn.lemwood.R
+import cn.lemwood.utils.LanguageManager
+import cn.lemwood.utils.rememberCurrentLanguage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(navController: NavController) {
+    val context = LocalContext.current
+    val currentLanguage = rememberCurrentLanguage()
     var isDarkTheme by remember { mutableStateOf(false) }
     var enableNotifications by remember { mutableStateOf(true) }
     var enableHapticFeedback by remember { mutableStateOf(true) }
+    var showLanguageDialog by remember { mutableStateOf(false) }
     
     LazyColumn(
         modifier = Modifier
@@ -27,10 +38,53 @@ fun SettingsScreen(navController: NavController) {
     ) {
         item {
             Text(
-                "设置",
+                stringResource(R.string.settings),
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold
             )
+        }
+        
+        // 语言设置
+        item {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = { showLanguageDialog = true }
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    Text(
+                        stringResource(R.string.language),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                    
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column {
+                            Text(
+                                currentLanguage.displayName,
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                            Text(
+                                stringResource(R.string.language_setting_desc),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        Icon(
+                            Icons.Default.Language,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
         }
         
         // 外观设置
@@ -270,4 +324,82 @@ fun SettingsScreen(navController: NavController) {
             }
         }
     }
+    
+    // 语言选择对话框
+    if (showLanguageDialog) {
+        LanguageSelectionDialog(
+            currentLanguage = currentLanguage,
+            onLanguageSelected = { language ->
+                LanguageManager.setLanguage(context, language)
+                showLanguageDialog = false
+            },
+            onDismiss = { showLanguageDialog = false }
+        )
+    }
+}
+
+/**
+ * 语言选择对话框
+ */
+@Composable
+private fun LanguageSelectionDialog(
+    currentLanguage: LanguageManager.Language,
+    onLanguageSelected: (LanguageManager.Language) -> Unit,
+    onDismiss: () -> Unit
+) {
+    val supportedLanguages = LanguageManager.getSupportedLanguages()
+    
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(
+                text = stringResource(R.string.language),
+                style = MaterialTheme.typography.headlineSmall
+            )
+        },
+        text = {
+            Column(
+                modifier = Modifier.selectableGroup()
+            ) {
+                supportedLanguages.forEach { language ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .selectable(
+                                selected = (language == currentLanguage),
+                                onClick = { onLanguageSelected(language) },
+                                role = Role.RadioButton
+                            )
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = (language == currentLanguage),
+                            onClick = null
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Column {
+                            Text(
+                                text = language.displayName,
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                            Text(
+                                text = when (language) {
+                                    LanguageManager.Language.CHINESE -> stringResource(R.string.language_chinese)
+                                    LanguageManager.Language.ENGLISH -> stringResource(R.string.language_english)
+                                },
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        }
+    )
 }

@@ -7,6 +7,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -22,6 +24,8 @@ import cn.lemwood.ui.screens.HomeScreen
 import cn.lemwood.ui.screens.ToolsScreen
 import cn.lemwood.ui.screens.SearchScreen
 import cn.lemwood.ui.screens.SettingsScreen
+import cn.lemwood.utils.LanguageManager
+import cn.lemwood.utils.rememberCurrentLanguage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,6 +33,8 @@ fun LemwoodToolsApp() {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+    val context = LocalContext.current
+    val currentLanguage = rememberCurrentLanguage()
     
     // 判断是否显示底部导航栏
     val showBottomBar = currentRoute in bottomNavItems.map { it.route }
@@ -38,19 +44,19 @@ fun LemwoodToolsApp() {
     
     // 获取当前页面标题
     val currentTitle = when (currentRoute) {
-        Screen.Home.route -> Screen.Home.title
-        Screen.Tools.route -> Screen.Tools.title
-        Screen.Search.route -> Screen.Search.title
-        Screen.Settings.route -> Screen.Settings.title
-        Screen.Calculator.route -> Screen.Calculator.title
-        Screen.Converter.route -> Screen.Converter.title
-        Screen.QRCode.route -> Screen.QRCode.title
-        Screen.TextTools.route -> Screen.TextTools.title
-        Screen.ColorPicker.route -> Screen.ColorPicker.title
-        Screen.Timer.route -> Screen.Timer.title
-        Screen.Weather.route -> Screen.Weather.title
-        Screen.Notes.route -> Screen.Notes.title
-        else -> "柠枺工具箱"
+        Screen.Home.route -> stringResource(R.string.nav_home)
+        Screen.Tools.route -> stringResource(R.string.nav_tools)
+        Screen.Search.route -> stringResource(R.string.nav_search)
+        Screen.Settings.route -> stringResource(R.string.nav_settings)
+        Screen.Calculator.route -> stringResource(R.string.tool_calculator)
+        Screen.Converter.route -> stringResource(R.string.tool_converter)
+        Screen.QRCode.route -> stringResource(R.string.tool_qrcode)
+        Screen.TextTools.route -> stringResource(R.string.tool_text_tools)
+        Screen.ColorPicker.route -> stringResource(R.string.tool_color_picker)
+        Screen.Timer.route -> stringResource(R.string.tool_timer)
+        Screen.Weather.route -> stringResource(R.string.tool_weather)
+        Screen.Notes.route -> stringResource(R.string.tool_notes)
+        else -> stringResource(R.string.app_name)
     }
     
     Scaffold(
@@ -103,36 +109,56 @@ fun LemwoodToolsApp() {
             
             // 工具页面
             composable(Screen.Calculator.route) {
-                ToolScreen("计算器", "这里是计算器功能")
+                ToolScreen(
+                    title = stringResource(R.string.tool_calculator),
+                    content = stringResource(R.string.tool_calculator_desc)
+                )
             }
             composable(Screen.Converter.route) {
-                ToolScreen("单位转换", "这里是单位转换功能")
+                ToolScreen(
+                    title = stringResource(R.string.tool_converter),
+                    content = stringResource(R.string.tool_converter_desc)
+                )
             }
             composable(Screen.QRCode.route) {
-                ToolScreen("二维码", "这里是二维码功能")
+                ToolScreen(
+                    title = stringResource(R.string.tool_qrcode),
+                    content = stringResource(R.string.tool_qrcode_desc)
+                )
             }
             composable(Screen.TextTools.route) {
-                ToolScreen("文本工具", "这里是文本工具功能")
+                ToolScreen(
+                    title = stringResource(R.string.tool_text_tools),
+                    content = stringResource(R.string.tool_text_tools_desc)
+                )
             }
             composable(Screen.ColorPicker.route) {
-                ToolScreen("颜色选择器", "这里是颜色选择器功能")
+                ToolScreen(
+                    title = stringResource(R.string.tool_color_picker),
+                    content = stringResource(R.string.tool_color_picker_desc)
+                )
             }
             composable(Screen.Timer.route) {
-                ToolScreen("计时器", "这里是计时器功能")
+                ToolScreen(
+                    title = stringResource(R.string.tool_timer),
+                    content = stringResource(R.string.tool_timer_desc)
+                )
             }
             composable(Screen.Weather.route) {
-                ToolScreen("天气查询", "这里是天气查询功能")
+                ToolScreen(
+                    title = stringResource(R.string.tool_weather),
+                    content = stringResource(R.string.tool_weather_desc)
+                )
             }
             composable(Screen.Notes.route) {
-                ToolScreen("快速笔记", "这里是快速笔记功能")
+                ToolScreen(
+                    title = stringResource(R.string.tool_notes),
+                    content = stringResource(R.string.tool_notes_desc)
+                )
             }
         }
     }
 }
-
-
-
-
 
 @Composable
 fun ToolScreen(title: String, content: String) {
@@ -163,7 +189,7 @@ fun ToolScreen(title: String, content: String) {
         )
         Spacer(modifier = Modifier.height(24.dp))
         Text(
-            "功能开发中...",
+            stringResource(R.string.feature_in_development),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.outline
         )

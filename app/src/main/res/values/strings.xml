@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">柠枺工具箱</string>
     <string name="welcome_title">欢迎使用柠枺工具箱</string>
-    <string name="welcome_subtitle">您的日常工具助手</string>
+    <string name="welcome_subtitle">您的多功能工具助手</string>
     <string name="calculator">计算器</string>
     <string name="calculator_desc">科学计算器和基础计算</string>
     <string name="converter">单位转换</string>
@@ -12,4 +12,74 @@
     <string name="text_tools">文本工具</string>
     <string name="text_tools_desc">文本处理和格式化</string>
     <string name="coming_soon">功能即将推出</string>
+    
+    <!-- 导航 -->
+    <string name="home">首页</string>
+    <string name="nav_home">首页</string>
+    <string name="nav_tools">工具</string>
+    <string name="nav_search">搜索</string>
+    <string name="nav_settings">设置</string>
+    <string name="search">搜索</string>
+    <string name="settings">设置</string>
+    
+    <!-- 搜索 -->
+    <string name="search_tools">搜索工具</string>
+    <string name="search_placeholder">输入工具名称或描述</string>
+    <string name="search_hint">输入关键词搜索工具</string>
+    <string name="search_results">搜索结果</string>
+    <string name="search_results_count">找到 %d 个结果</string>
+    <string name="no_results">未找到相关工具</string>
+    <string name="try_different_keywords">尝试使用不同的关键词</string>
+    <string name="clear_search">清除搜索</string>
+    <string name="clear">清除</string>
+    
+    <!-- 设置 -->
+    <string name="settings_title">设置</string>
+    <string name="language">语言</string>
+    <string name="language_setting">语言设置</string>
+    <string name="current_language">当前语言</string>
+    <string name="select_language">选择语言</string>
+    <string name="language_chinese">中文</string>
+    <string name="language_english">English</string>
+    <string name="language_setting_desc">选择您的首选语言</string>
+    <string name="theme">主题</string>
+    <string name="theme_system">跟随系统</string>
+    <string name="theme_light">浅色</string>
+    <string name="theme_dark">深色</string>
+    <string name="about">关于</string>
+    <string name="version">版本</string>
+    
+    <!-- 分类 -->
+    <string name="all_tools">所有工具</string>
+    <string name="featured_tools">推荐工具</string>
+    <string name="filter">筛选</string>
+    <string name="select_category">选择分类</string>
+    <string name="category_calculation">计算</string>
+    <string name="category_conversion">转换</string>
+    <string name="category_text">文本</string>
+    <string name="category_utility">实用工具</string>
+    <string name="category_general">通用</string>
+    
+    <!-- 通用 -->
+    <string name="app_stats">应用统计</string>
+    <string name="total_tools">工具总数</string>
+    <string name="categories">分类数量</string>
+    <string name="ok">确定</string>
+    <string name="cancel">取消</string>
+    <string name="confirm">确认</string>
+    <string name="save">保存</string>
+    <string name="delete">删除</string>
+    <string name="edit">编辑</string>
+    <string name="copy">复制</string>
+    <string name="share">分享</string>
+    <string name="close">关闭</string>
+    <string name="back">返回</string>
+    <string name="next">下一步</string>
+    <string name="previous">上一步</string>
+    <string name="loading">加载中...</string>
+    <string name="error">错误</string>
+    <string name="success">成功</string>
+    <string name="warning">警告</string>
+    <string name="info">信息</string>
+    <string name="retry">重试</string>
 </resources>
