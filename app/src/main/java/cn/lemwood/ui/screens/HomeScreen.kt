@@ -18,7 +18,7 @@ import cn.lemwood.ui.components.ToolCard
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavController) {
-    val featuredTools = ToolsRepository.allTools.take(4)
+    val featuredTools = ToolsRepository.getAllTools().take(4)
     
     LazyColumn(
         modifier = Modifier
@@ -110,7 +110,7 @@ fun HomeScreen(navController: NavController) {
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            "${ToolsRepository.allTools.size}",
+                            "${ToolsRepository.getAllTools().size}",
                             style = MaterialTheme.typography.headlineMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.primary

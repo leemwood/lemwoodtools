@@ -20,6 +20,9 @@ on:
 permissions:
   contents: write
   actions: read
+  checks: write
+  pull-requests: write
+  statuses: write
 
 env:
   GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2 -Dorg.gradle.parallel=true

@@ -14,8 +14,12 @@ data class ToolItem(
     val keywords: List<String> = emptyList()
 )
 
-object ToolsRepository {
-    val allTools = listOf(
+/**
+ * 工具仓库实现类
+ * 提供应用中所有工具的数据访问功能
+ */
+object ToolsRepository : IToolsRepository {
+    private val allTools = listOf(
         ToolItem(
             id = "calculator",
             title = "计算器",
@@ -90,10 +94,12 @@ object ToolsRepository {
         )
     )
     
-    fun searchTools(query: String): List<ToolItem> {
+    override fun getAllTools(): List<ToolItem> = allTools
+    
+    override fun searchTools(query: String): List<ToolItem> {
         if (query.isBlank()) return allTools
         
-        val lowerQuery = query.lowercase()
+        val lowerQuery = query.lowercase().trim()
         return allTools.filter { tool ->
             tool.title.lowercase().contains(lowerQuery) ||
             tool.description.lowercase().contains(lowerQuery) ||
@@ -102,7 +108,15 @@ object ToolsRepository {
         }
     }
     
-    fun getToolsByCategory(): Map<String, List<ToolItem>> {
+    override fun getToolsByCategory(): Map<String, List<ToolItem>> {
         return allTools.groupBy { it.category }
+    }
+    
+    override fun getToolById(id: String): ToolItem? {
+        return allTools.find { it.id == id }
+    }
+    
+    override fun getCategories(): List<String> {
+        return allTools.map { it.category }.distinct().sorted()
     }
 }
