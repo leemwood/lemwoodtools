@@ -1,20 +1,12 @@
 package cn.lemwood
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -26,8 +18,6 @@ import cn.lemwood.ui.components.TopAppBarWithMenu
 import cn.lemwood.ui.screens.*
 import cn.lemwood.ui.theme.LemwoodToolsTheme
 import cn.lemwood.utils.InitializationManager
-import cn.lemwood.utils.LanguageManager
-import cn.lemwood.utils.rememberCurrentLanguage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,10 +25,7 @@ fun LemwoodToolsApp() {
     LemwoodToolsTheme {
         val navController = rememberNavController()
         val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentDestination = navBackStackEntry?.destination
         val currentRoute = navBackStackEntry?.destination?.route
-        val context = LocalContext.current
-        val currentLanguage = rememberCurrentLanguage()
         
         // 监听初始化状态
         val initState by InitializationManager.initializationState.collectAsState()
@@ -74,19 +61,23 @@ fun LemwoodToolsApp() {
                             Screen.Search.route -> stringResource(R.string.search)
                             Screen.Settings.route -> stringResource(R.string.settings)
                             else -> stringResource(R.string.app_name)
-                        },
-                        onLanguageChange = { language ->
-                            LanguageManager.setLanguage(context, language)
-                        },
-                        currentLanguage = currentLanguage
+                        }
                     )
                 }
             },
             bottomBar = {
                 if (showBottomBar) {
                     BottomNavigationBar(
-                        navController = navController,
-                        currentDestination = currentDestination
+                        currentRoute = currentRoute,
+                        onNavigate = { route ->
+                            navController.navigate(route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        }
                     )
                 }
             }
@@ -112,12 +103,7 @@ fun LemwoodToolsApp() {
                     ) 
                 }
                 composable(Screen.Settings.route) { 
-                    SettingsScreen(
-                        onLanguageChange = { language ->
-                            LanguageManager.setLanguage(context, language)
-                        },
-                        currentLanguage = currentLanguage
-                    ) 
+                    SettingsScreen(navController = navController) 
                 }
                 
                 // 工具页面 - 使用占位符界面

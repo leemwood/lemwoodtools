@@ -80,8 +80,6 @@
     <string name="password_generator">Password Generator</string>
     <string name="todo_list">Todo List</string>
     
-    <!-- Home Screen -->
-    
     <!-- Permissions -->
     <string name="permission_storage">Storage Permission</string>
     <string name="permission_storage_desc">Used to save and read files</string>
