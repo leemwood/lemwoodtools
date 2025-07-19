@@ -136,4 +136,22 @@
     <string name="warning">警告</string>
     <string name="info">信息</string>
     <string name="retry">重试</string>
+    <!-- 初始化界面 -->
+    <string name="init_welcome_message">正在为您准备工具库，请稍候…</string>
+    <string name="init_progress">正在进行第 %1$d 步，共 %2$d 步</string>
+    <string name="init_completed">初始化完成！</string>
+    <string name="init_error">初始化失败</string>
+    <string name="init_error_message">初始化过程中出现错误，请重试</string>
+    <string name="retry">重试</string>
+    
+    <!-- 初始化步骤 -->
+    <string name="init_step_language">语言设置</string>
+    <string name="init_step_language_desc">配置应用语言环境</string>
+    <string name="init_step_permissions">权限检查</string>
+    <string name="init_step_permissions_desc">检查应用所需权限</string>
+    <string name="init_step_tools">工具库加载</string>
+    <string name="init_step_tools_desc">加载工具库和配置</string>
+    <string name="init_step_cache">缓存初始化</string>
+    <string name="init_step_cache_desc">初始化应用缓存系统</string>
+    
 </resources>

@@ -111,4 +111,22 @@
     <string name="error">Error</string>
     <string name="loading">Loading...</string>
     <string name="retry">Retry</string>
+    <!-- Initialization Screen -->
+    <string name="init_welcome_message">Preparing the toolkit for you, please wait…</string>
+    <string name="init_progress">Step %1$d of %2$d in progress</string>
+    <string name="init_completed">Initialization completed!</string>
+    <string name="init_error">Initialization failed</string>
+    <string name="init_error_message">An error occurred during initialization, please retry</string>
+    <string name="retry">Retry</string>
+    
+    <!-- Initialization Steps -->
+    <string name="init_step_language">Language Settings</string>
+    <string name="init_step_language_desc">Configure application language environment</string>
+    <string name="init_step_permissions">Permission Check</string>
+    <string name="init_step_permissions_desc">Check required application permissions</string>
+    <string name="init_step_tools">Toolkit Loading</string>
+    <string name="init_step_tools_desc">Load toolkit and configurations</string>
+    <string name="init_step_cache">Cache Initialization</string>
+    <string name="init_step_cache_desc">Initialize application cache system</string>
+    
 </resources>
