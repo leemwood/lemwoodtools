@@ -4,17 +4,17 @@ import android.content.Context
 import android.widget.Toast
 
 /**
- * 反馈功能测试助手
- * 用于测试通知和振动反馈功能是否正常工作
+ * 反馈测试助手类
+ * 用于测试振动和通知反馈功能
  */
 object FeedbackTestHelper {
     
     /**
-     * 测试所有振动反馈类型
+     * 测试所有振动类型
      */
     fun testAllVibrations(context: Context) {
         if (!HapticFeedbackHelper.isVibrationSupported(context)) {
-            Toast.makeText(context, "设备不支持振动功能", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "设备不支持振动", Toast.LENGTH_SHORT).show()
             return
         }
         
@@ -23,30 +23,29 @@ object FeedbackTestHelper {
             return
         }
         
-        // 测试轻微振动
-        HapticFeedbackHelper.lightVibration(context)
-        Toast.makeText(context, "轻微振动测试", Toast.LENGTH_SHORT).show()
+        // 测试按钮点击振动
+        HapticFeedbackHelper.buttonClickVibration(context)
         
         // 延迟测试其他振动类型
         android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
-            HapticFeedbackHelper.mediumVibration(context)
-            Toast.makeText(context, "中等振动测试", Toast.LENGTH_SHORT).show()
+            HapticFeedbackHelper.successVibration(context)
         }, 1000)
         
         android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
-            HapticFeedbackHelper.strongVibration(context)
-            Toast.makeText(context, "强烈振动测试", Toast.LENGTH_SHORT).show()
+            HapticFeedbackHelper.errorVibration(context)
         }, 2000)
         
         android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
-            HapticFeedbackHelper.successVibration(context)
-            Toast.makeText(context, "成功振动测试", Toast.LENGTH_SHORT).show()
+            HapticFeedbackHelper.warningVibration(context)
         }, 3000)
         
         android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
-            HapticFeedbackHelper.errorVibration(context)
-            Toast.makeText(context, "错误振动测试", Toast.LENGTH_SHORT).show()
+            HapticFeedbackHelper.longPressVibration(context)
         }, 4000)
+        
+        android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
+            HapticFeedbackHelper.doubleClickVibration(context)
+        }, 5000)
     }
     
     /**
@@ -68,11 +67,11 @@ object FeedbackTestHelper {
         
         // 延迟测试其他通知类型
         android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
-            NotificationHelper.sendToolUsageNotification(context, "计算器", "正在使用计算器工具")
+            NotificationHelper.sendToolUsageNotification(context, "计算器")
         }, 2000)
         
         android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
-            NotificationHelper.sendTaskCompletedNotification(context, "测试任务", "任务已成功完成")
+            NotificationHelper.sendTaskCompletedNotification(context, "测试任务")
         }, 4000)
     }
     
@@ -92,7 +91,7 @@ object FeedbackTestHelper {
             }
             
             if (SettingsManager.notificationsEnabled.value && NotificationHelper.hasNotificationPermission(context)) {
-                NotificationHelper.sendTaskCompletedNotification(context, "组合测试", "振动和通知反馈测试完成")
+                NotificationHelper.sendTaskCompletedNotification(context, "组合测试")
             }
         }, 1000)
     }
