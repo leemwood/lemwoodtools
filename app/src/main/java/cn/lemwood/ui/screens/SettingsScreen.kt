@@ -373,7 +373,7 @@ fun SettingsScreen(navController: NavController) {
                                 HapticFeedbackHelper.successVibration(context)
                             }
                             if (enableNotifications && NotificationHelper.hasNotificationPermission(context)) {
-                                NotificationHelper.sendTaskCompletionNotification(context, "缓存清理", "缓存已成功清理")
+                                NotificationHelper.sendTaskCompletedNotification(context, "缓存清理", "缓存已成功清理")
                             }
                         } else {
                             if (enableHapticFeedback && HapticFeedbackHelper.isVibrationSupported(context)) {

@@ -72,7 +72,7 @@ object FeedbackTestHelper {
         }, 2000)
         
         android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
-            NotificationHelper.sendTaskCompletionNotification(context, "测试任务", "任务已成功完成")
+            NotificationHelper.sendTaskCompletedNotification(context, "测试任务", "任务已成功完成")
         }, 4000)
     }
     
@@ -92,7 +92,7 @@ object FeedbackTestHelper {
             }
             
             if (SettingsManager.notificationsEnabled.value && NotificationHelper.hasNotificationPermission(context)) {
-                NotificationHelper.sendTaskCompletionNotification(context, "组合测试", "振动和通知反馈测试完成")
+                NotificationHelper.sendTaskCompletedNotification(context, "组合测试", "振动和通知反馈测试完成")
             }
         }, 1000)
     }
