@@ -40,8 +40,8 @@ fun SettingsScreen(navController: NavController) {
     val context = LocalContext.current
     val currentLanguage = rememberCurrentLanguage()
     val isDarkTheme = rememberIsDarkTheme()
-    val enableNotifications by rememberNotificationsEnabled()
-    val enableHapticFeedback by rememberHapticFeedbackEnabled()
+    val enableNotifications = rememberNotificationsEnabled()
+    val enableHapticFeedback = rememberHapticFeedbackEnabled()
     var showLanguageDialog by remember { mutableStateOf(false) }
     
     // 通知权限请求
@@ -461,7 +461,7 @@ private fun LanguageSelectionDialog(
 ) {
     val supportedLanguages = LanguageManager.getSupportedLanguages()
     val context = LocalContext.current
-    val enableHapticFeedback by rememberHapticFeedbackEnabled()
+    val enableHapticFeedback = rememberHapticFeedbackEnabled()
     
     AlertDialog(
         onDismissRequest = onDismiss,

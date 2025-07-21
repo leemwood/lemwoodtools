@@ -20,8 +20,8 @@ import cn.lemwood.utils.rememberHapticFeedbackEnabled
 @Composable
 fun PlaceholderScreen(toolName: String) {
     val context = LocalContext.current
-    val notificationsEnabled by rememberNotificationsEnabled()
-    val hapticFeedbackEnabled by rememberHapticFeedbackEnabled()
+    val notificationsEnabled = rememberNotificationsEnabled()
+    val hapticFeedbackEnabled = rememberHapticFeedbackEnabled()
     
     // 进入工具时的反馈
     LaunchedEffect(toolName) {

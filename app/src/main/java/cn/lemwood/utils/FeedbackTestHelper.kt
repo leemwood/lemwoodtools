@@ -36,7 +36,7 @@ object FeedbackTestHelper {
         }, 2000)
         
         android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
-            HapticFeedbackHelper.warningVibration(context)
+            HapticFeedbackHelper.errorVibration(context)
         }, 3000)
         
         android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({

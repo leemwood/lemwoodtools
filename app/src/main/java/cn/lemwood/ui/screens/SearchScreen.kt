@@ -28,7 +28,7 @@ import cn.lemwood.utils.rememberHapticFeedbackEnabled
 fun SearchScreen(navController: NavController) {
     var searchQuery by remember { mutableStateOf("") }
     val context = LocalContext.current
-    val enableHapticFeedback by rememberHapticFeedbackEnabled()
+    val enableHapticFeedback = rememberHapticFeedbackEnabled()
     
     val searchResults = remember(searchQuery) {
         if (searchQuery.isBlank()) {

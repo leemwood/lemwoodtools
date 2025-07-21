@@ -27,7 +27,7 @@ fun TopAppBarWithMenu(
     actions: @Composable RowScope.() -> Unit = {}
 ) {
     val context = LocalContext.current
-    val enableHapticFeedback by rememberHapticFeedbackEnabled()
+    val enableHapticFeedback = rememberHapticFeedbackEnabled()
     
     TopAppBar(
         title = {
@@ -78,7 +78,7 @@ fun BottomNavigationBar(
     onNavigate: (String) -> Unit
 ) {
     val context = LocalContext.current
-    val enableHapticFeedback by rememberHapticFeedbackEnabled()
+    val enableHapticFeedback = rememberHapticFeedbackEnabled()
     
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.surface,
