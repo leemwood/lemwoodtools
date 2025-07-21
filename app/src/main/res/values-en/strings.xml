@@ -32,6 +32,11 @@
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
     <string name="close">Close</string>
+    <string name="no_email_app">No email app found</string>
+    <string name="feedback_error">Feedback feature temporarily unavailable</string>
+    <string name="cache_cleared">Cache cleared</string>
+    <string name="cache_clear_error">Failed to clear cache</string>
+    <string name="language_setting_desc">Choose app display language</string>
     
     <!-- Categories -->
     <string name="all_tools">All Tools</string>
@@ -61,7 +66,7 @@
     <string name="push_notifications_desc">Receive important updates and reminders</string>
     <string name="interaction">Interaction</string>
     <string name="haptic_feedback">Haptic Feedback</string>
-    <string name="haptic_feedback_desc">Vibration feedback when buttons are clicked</string>
+    <string name="haptic_feedback_desc">Vibration feedback when buttons are pressed</string>
     <string name="about">About</string>
     <string name="version">Version</string>
     <string name="developer">Developer</string>

@@ -18,11 +18,17 @@ import cn.lemwood.ui.components.TopAppBarWithMenu
 import cn.lemwood.ui.screens.*
 import cn.lemwood.ui.theme.LemwoodToolsTheme
 import cn.lemwood.utils.InitializationManager
+import cn.lemwood.utils.ThemeManager
+import cn.lemwood.utils.SettingsManager
+import cn.lemwood.utils.rememberIsDarkTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LemwoodToolsApp() {
-    LemwoodToolsTheme {
+    val context = LocalContext.current
+    val isDarkTheme = rememberIsDarkTheme()
+    
+    LemwoodToolsTheme(darkTheme = isDarkTheme) {
         val navController = rememberNavController()
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route

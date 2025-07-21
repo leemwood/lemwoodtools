@@ -9,6 +9,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import cn.lemwood.ui.theme.LemwoodToolsTheme
 import cn.lemwood.utils.LanguageManager
+import cn.lemwood.utils.ThemeManager
+import cn.lemwood.utils.SettingsManager
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,6 +18,12 @@ class MainActivity : ComponentActivity() {
         
         // 初始化语言管理器
         LanguageManager.initialize(this)
+        
+        // 初始化主题管理器
+        ThemeManager.initialize(this)
+        
+        // 初始化设置管理器
+        SettingsManager.initialize(this)
         
         setContent {
             LemwoodToolsTheme {

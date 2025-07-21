@@ -19,15 +19,22 @@ import androidx.navigation.NavController
 import cn.lemwood.R
 import cn.lemwood.utils.LanguageManager
 import cn.lemwood.utils.rememberCurrentLanguage
+import cn.lemwood.utils.ThemeManager
+import cn.lemwood.utils.SettingsManager
+import cn.lemwood.utils.rememberIsDarkTheme
+import cn.lemwood.utils.rememberNotificationsEnabled
+import cn.lemwood.utils.rememberHapticFeedbackEnabled
+import cn.lemwood.utils.FeedbackUtils
+import android.widget.Toast
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(navController: NavController) {
     val context = LocalContext.current
     val currentLanguage = rememberCurrentLanguage()
-    var isDarkTheme by remember { mutableStateOf(false) }
-    var enableNotifications by remember { mutableStateOf(true) }
-    var enableHapticFeedback by remember { mutableStateOf(true) }
+    val isDarkTheme = rememberIsDarkTheme()
+    val enableNotifications = rememberNotificationsEnabled()
+    val enableHapticFeedback = rememberHapticFeedbackEnabled()
     var showLanguageDialog by remember { mutableStateOf(false) }
     
     LazyColumn(
@@ -121,7 +128,7 @@ fun SettingsScreen(navController: NavController) {
                         }
                         Switch(
                             checked = isDarkTheme,
-                            onCheckedChange = { isDarkTheme = it }
+                            onCheckedChange = { ThemeManager.setDarkTheme(it) }
                         )
                     }
                 }
@@ -162,7 +169,7 @@ fun SettingsScreen(navController: NavController) {
                         }
                         Switch(
                             checked = enableNotifications,
-                            onCheckedChange = { enableNotifications = it }
+                            onCheckedChange = { SettingsManager.setNotificationsEnabled(it) }
                         )
                     }
                 }
@@ -203,7 +210,7 @@ fun SettingsScreen(navController: NavController) {
                         }
                         Switch(
                             checked = enableHapticFeedback,
-                            onCheckedChange = { enableHapticFeedback = it }
+                            onCheckedChange = { SettingsManager.setHapticFeedbackEnabled(it) }
                         )
                     }
                 }
@@ -297,7 +304,15 @@ fun SettingsScreen(navController: NavController) {
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* TODO: 清除缓存 */ },
+                    onClick = { 
+                        val success = SettingsManager.clearCache(context)
+                        val message = if (success) {
+                            context.getString(R.string.cache_cleared)
+                        } else {
+                            context.getString(R.string.cache_clear_error)
+                        }
+                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                    },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Icon(
@@ -310,7 +325,9 @@ fun SettingsScreen(navController: NavController) {
                 }
                 
                 OutlinedButton(
-                    onClick = { /* TODO: 反馈 */ },
+                    onClick = { 
+                        FeedbackUtils.sendEmailFeedback(context)
+                    },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Icon(
