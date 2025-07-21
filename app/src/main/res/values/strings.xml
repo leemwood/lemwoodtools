@@ -137,7 +137,6 @@
     <string name="feedback_error">反馈功能暂时不可用</string>
     <string name="cache_cleared">缓存已清除</string>
     <string name="cache_clear_error">清除缓存失败</string>
-    <string name="language_setting_desc">选择应用显示语言</string>
     <string name="confirm">确认</string>
     <string name="save">保存</string>
     <string name="delete">删除</string>
