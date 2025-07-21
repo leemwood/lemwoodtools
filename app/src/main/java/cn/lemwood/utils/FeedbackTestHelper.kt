@@ -44,7 +44,7 @@ object FeedbackTestHelper {
         }, 4000)
         
         android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
-            HapticFeedbackHelper.doubleClickVibration(context)
+            HapticFeedbackHelper.doubleVibration(context)
         }, 5000)
     }
     
