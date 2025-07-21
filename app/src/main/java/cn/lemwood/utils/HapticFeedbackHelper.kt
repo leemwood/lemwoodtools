@@ -34,6 +34,13 @@ object HapticFeedbackHelper {
     }
     
     /**
+     * 检查设备是否支持振动（别名方法）
+     */
+    fun isVibrationSupported(context: Context): Boolean {
+        return hasVibrator(context)
+    }
+    
+    /**
      * 轻微振动反馈（按钮点击）
      */
     fun lightVibration(context: Context) {
