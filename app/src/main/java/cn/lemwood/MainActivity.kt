@@ -11,6 +11,7 @@ import cn.lemwood.ui.theme.LemwoodToolsTheme
 import cn.lemwood.utils.LanguageManager
 import cn.lemwood.utils.ThemeManager
 import cn.lemwood.utils.SettingsManager
+import cn.lemwood.utils.NotificationHelper
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,6 +25,9 @@ class MainActivity : ComponentActivity() {
         
         // 初始化设置管理器
         SettingsManager.initialize(this)
+        
+        // 初始化通知渠道
+        NotificationHelper.initNotificationChannel(this)
         
         setContent {
             LemwoodToolsTheme {

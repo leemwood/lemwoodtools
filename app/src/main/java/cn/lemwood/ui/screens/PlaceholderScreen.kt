@@ -5,14 +5,34 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import cn.lemwood.utils.NotificationHelper
+import cn.lemwood.utils.HapticFeedbackHelper
+import cn.lemwood.utils.rememberNotificationsEnabled
+import cn.lemwood.utils.rememberHapticFeedbackEnabled
 
 @Composable
 fun PlaceholderScreen(toolName: String) {
+    val context = LocalContext.current
+    val notificationsEnabled = rememberNotificationsEnabled()
+    val hapticFeedbackEnabled = rememberHapticFeedbackEnabled()
+    
+    // 进入工具时的反馈
+    LaunchedEffect(toolName) {
+        if (hapticFeedbackEnabled && HapticFeedbackHelper.isVibrationSupported(context)) {
+            HapticFeedbackHelper.lightVibration(context)
+        }
+        
+        if (notificationsEnabled && NotificationHelper.hasNotificationPermission(context)) {
+            NotificationHelper.sendToolUsageNotification(context, toolName)
+        }
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()

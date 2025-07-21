@@ -5,10 +5,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import cn.lemwood.data.ToolItem
 import cn.lemwood.utils.CategoryHelper
+import cn.lemwood.utils.HapticFeedbackHelper
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -17,8 +19,13 @@ fun ToolCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+    
     Card(
-        onClick = onClick,
+        onClick = {
+            HapticFeedbackHelper.buttonClickVibration(context)
+            onClick()
+        },
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface

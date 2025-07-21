@@ -10,6 +10,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -19,11 +20,15 @@ import cn.lemwood.R
 import cn.lemwood.data.ToolsRepository
 import cn.lemwood.ui.components.ToolCard
 import cn.lemwood.utils.CategoryHelper
+import cn.lemwood.utils.HapticFeedbackHelper
+import cn.lemwood.utils.rememberHapticFeedbackEnabled
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(navController: NavController) {
     var searchQuery by remember { mutableStateOf("") }
+    val context = LocalContext.current
+    val enableHapticFeedback by rememberHapticFeedbackEnabled()
     
     val searchResults = remember(searchQuery) {
         if (searchQuery.isBlank()) {
@@ -53,7 +58,12 @@ fun SearchScreen(navController: NavController) {
             trailingIcon = {
                 if (searchQuery.isNotEmpty()) {
                     IconButton(
-                        onClick = { searchQuery = "" }
+                        onClick = { 
+                            if (enableHapticFeedback && HapticFeedbackHelper.isVibrationSupported(context)) {
+                                HapticFeedbackHelper.buttonClickVibration(context)
+                            }
+                            searchQuery = "" 
+                        }
                     ) {
                         Icon(
                             Icons.Default.Clear,

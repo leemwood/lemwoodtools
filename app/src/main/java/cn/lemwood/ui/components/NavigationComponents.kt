@@ -5,13 +5,17 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import cn.lemwood.R
 import cn.lemwood.navigation.Screen
+import cn.lemwood.utils.HapticFeedbackHelper
+import cn.lemwood.utils.rememberHapticFeedbackEnabled
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -22,6 +26,9 @@ fun TopAppBarWithMenu(
     onMenuClick: () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {}
 ) {
+    val context = LocalContext.current
+    val enableHapticFeedback by rememberHapticFeedbackEnabled()
+    
     TopAppBar(
         title = {
             Text(
@@ -31,7 +38,12 @@ fun TopAppBarWithMenu(
         },
         navigationIcon = {
             if (canNavigateBack) {
-                IconButton(onClick = onNavigateBack) {
+                IconButton(onClick = {
+                    if (enableHapticFeedback && HapticFeedbackHelper.isVibrationSupported(context)) {
+                        HapticFeedbackHelper.buttonClickVibration(context)
+                    }
+                    onNavigateBack()
+                }) {
                     Icon(
                         Icons.Default.ArrowBack,
                         contentDescription = "返回"
@@ -41,7 +53,12 @@ fun TopAppBarWithMenu(
         },
         actions = {
             actions()
-            IconButton(onClick = onMenuClick) {
+            IconButton(onClick = {
+                if (enableHapticFeedback && HapticFeedbackHelper.isVibrationSupported(context)) {
+                    HapticFeedbackHelper.buttonClickVibration(context)
+                }
+                onMenuClick()
+            }) {
                 Icon(
                     Icons.Default.Menu,
                     contentDescription = "菜单"
@@ -60,6 +77,9 @@ fun BottomNavigationBar(
     currentRoute: String?,
     onNavigate: (String) -> Unit
 ) {
+    val context = LocalContext.current
+    val enableHapticFeedback by rememberHapticFeedbackEnabled()
+    
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.surface,
         contentColor = MaterialTheme.colorScheme.onSurface
@@ -82,7 +102,12 @@ fun BottomNavigationBar(
                 },
                 label = { Text(label) },
                 selected = currentRoute == screen.route,
-                onClick = { onNavigate(screen.route) },
+                onClick = { 
+                    if (enableHapticFeedback && HapticFeedbackHelper.isVibrationSupported(context)) {
+                        HapticFeedbackHelper.buttonClickVibration(context)
+                    }
+                    onNavigate(screen.route) 
+                },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.primary,
                     selectedTextColor = MaterialTheme.colorScheme.primary,

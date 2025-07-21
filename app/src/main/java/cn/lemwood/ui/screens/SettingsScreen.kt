@@ -17,15 +17,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import cn.lemwood.R
+import cn.lemwood.utils.FeedbackTestHelper
+import cn.lemwood.utils.FeedbackUtils
+import cn.lemwood.utils.HapticFeedbackHelper
 import cn.lemwood.utils.LanguageManager
-import cn.lemwood.utils.rememberCurrentLanguage
-import cn.lemwood.utils.ThemeManager
+import cn.lemwood.utils.NotificationHelper
 import cn.lemwood.utils.SettingsManager
+import cn.lemwood.utils.ThemeManager
+import cn.lemwood.utils.rememberCurrentLanguage
+import cn.lemwood.utils.rememberHapticFeedbackEnabled
 import cn.lemwood.utils.rememberIsDarkTheme
 import cn.lemwood.utils.rememberNotificationsEnabled
-import cn.lemwood.utils.rememberHapticFeedbackEnabled
-import cn.lemwood.utils.FeedbackUtils
 import android.widget.Toast
+import android.Manifest
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,6 +43,18 @@ fun SettingsScreen(navController: NavController) {
     val enableNotifications = rememberNotificationsEnabled()
     val enableHapticFeedback = rememberHapticFeedbackEnabled()
     var showLanguageDialog by remember { mutableStateOf(false) }
+    
+    // 通知权限请求
+    val notificationPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            SettingsManager.setNotificationsEnabled(true)
+            Toast.makeText(context, "通知权限已授予", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(context, "通知权限被拒绝", Toast.LENGTH_SHORT).show()
+        }
+    }
     
     LazyColumn(
         modifier = Modifier
@@ -55,7 +74,12 @@ fun SettingsScreen(navController: NavController) {
         item {
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = { showLanguageDialog = true }
+                onClick = { 
+                    showLanguageDialog = true
+                    if (enableHapticFeedback && HapticFeedbackHelper.isVibrationSupported(context)) {
+                        HapticFeedbackHelper.buttonClickVibration(context)
+                    }
+                }
             ) {
                 Column(
                     modifier = Modifier.padding(16.dp)
@@ -128,7 +152,12 @@ fun SettingsScreen(navController: NavController) {
                         }
                         Switch(
                             checked = isDarkTheme,
-                            onCheckedChange = { ThemeManager.setDarkTheme(it) }
+                            onCheckedChange = { enabled ->
+                                ThemeManager.setDarkTheme(enabled)
+                                if (enableHapticFeedback && HapticFeedbackHelper.isVibrationSupported(context)) {
+                                    HapticFeedbackHelper.buttonClickVibration(context)
+                                }
+                            }
                         )
                     }
                 }
@@ -169,7 +198,22 @@ fun SettingsScreen(navController: NavController) {
                         }
                         Switch(
                             checked = enableNotifications,
-                            onCheckedChange = { SettingsManager.setNotificationsEnabled(it) }
+                            onCheckedChange = { enabled ->
+                                if (enabled) {
+                                    // 检查通知权限
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                        if (NotificationHelper.hasNotificationPermission(context)) {
+                                            SettingsManager.setNotificationsEnabled(true)
+                                        } else {
+                                            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                                        }
+                                    } else {
+                                        SettingsManager.setNotificationsEnabled(true)
+                                    }
+                                } else {
+                                    SettingsManager.setNotificationsEnabled(false)
+                                }
+                            }
                         )
                     }
                 }
@@ -210,7 +254,12 @@ fun SettingsScreen(navController: NavController) {
                         }
                         Switch(
                             checked = enableHapticFeedback,
-                            onCheckedChange = { SettingsManager.setHapticFeedbackEnabled(it) }
+                            onCheckedChange = { enabled ->
+                                SettingsManager.setHapticFeedbackEnabled(enabled)
+                                if (enabled && HapticFeedbackHelper.isVibrationSupported(context)) {
+                                    HapticFeedbackHelper.successVibration(context)
+                                }
+                            }
                         )
                     }
                 }
@@ -305,6 +354,11 @@ fun SettingsScreen(navController: NavController) {
             ) {
                 OutlinedButton(
                     onClick = { 
+                        // 按钮点击振动反馈
+                        if (enableHapticFeedback && HapticFeedbackHelper.isVibrationSupported(context)) {
+                            HapticFeedbackHelper.buttonClickVibration(context)
+                        }
+                        
                         val success = SettingsManager.clearCache(context)
                         val message = if (success) {
                             context.getString(R.string.cache_cleared)
@@ -312,6 +366,20 @@ fun SettingsScreen(navController: NavController) {
                             context.getString(R.string.cache_clear_error)
                         }
                         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                        
+                        // 操作完成反馈
+                        if (success) {
+                            if (enableHapticFeedback && HapticFeedbackHelper.isVibrationSupported(context)) {
+                                HapticFeedbackHelper.successVibration(context)
+                            }
+                            if (enableNotifications && NotificationHelper.hasNotificationPermission(context)) {
+                                NotificationHelper.sendTaskCompletionNotification(context, "缓存清理", "缓存已成功清理")
+                            }
+                        } else {
+                            if (enableHapticFeedback && HapticFeedbackHelper.isVibrationSupported(context)) {
+                                HapticFeedbackHelper.errorVibration(context)
+                            }
+                        }
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {
@@ -326,6 +394,11 @@ fun SettingsScreen(navController: NavController) {
                 
                 OutlinedButton(
                     onClick = { 
+                        // 按钮点击振动反馈
+                        if (enableHapticFeedback && HapticFeedbackHelper.isVibrationSupported(context)) {
+                            HapticFeedbackHelper.buttonClickVibration(context)
+                        }
+                        
                         FeedbackUtils.sendEmailFeedback(context)
                     },
                     modifier = Modifier.fillMaxWidth()
@@ -337,6 +410,28 @@ fun SettingsScreen(navController: NavController) {
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(stringResource(R.string.feedback))
+                }
+                
+                // 测试反馈功能按钮
+                OutlinedButton(
+                    onClick = { 
+                        // 按钮点击振动反馈
+                        if (enableHapticFeedback && HapticFeedbackHelper.isVibrationSupported(context)) {
+                            HapticFeedbackHelper.buttonClickVibration(context)
+                        }
+                        
+                        // 测试组合反馈功能
+                        FeedbackTestHelper.testCombinedFeedback(context)
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(
+                        Icons.Default.BugReport,
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("测试反馈功能")
                 }
             }
         }
@@ -365,6 +460,8 @@ private fun LanguageSelectionDialog(
     onDismiss: () -> Unit
 ) {
     val supportedLanguages = LanguageManager.getSupportedLanguages()
+    val context = LocalContext.current
+    val enableHapticFeedback by rememberHapticFeedbackEnabled()
     
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -384,7 +481,12 @@ private fun LanguageSelectionDialog(
                             .fillMaxWidth()
                             .selectable(
                                 selected = (language == currentLanguage),
-                                onClick = { onLanguageSelected(language) },
+                                onClick = { 
+                                    if (enableHapticFeedback && HapticFeedbackHelper.isVibrationSupported(context)) {
+                                        HapticFeedbackHelper.buttonClickVibration(context)
+                                    }
+                                    onLanguageSelected(language) 
+                                },
                                 role = Role.RadioButton
                             )
                             .padding(vertical = 8.dp),
