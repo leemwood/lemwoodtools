@@ -2,6 +2,7 @@ package cn.lemwood.utils
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.res.Configuration
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -27,7 +28,12 @@ object ThemeManager {
      */
     fun initialize(context: Context) {
         prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        _isDarkTheme.value = prefs.getBoolean(KEY_DARK_THEME, false)
+        
+        // 如果是第一次启动，使用系统主题设置
+        val isSystemDarkTheme = (context.resources.configuration.uiMode and 
+                Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        
+        _isDarkTheme.value = prefs.getBoolean(KEY_DARK_THEME, isSystemDarkTheme)
     }
     
     /**

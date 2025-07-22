@@ -3,11 +3,6 @@ package cn.lemwood
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.ui.Modifier
-import cn.lemwood.ui.theme.LemwoodToolsTheme
 import cn.lemwood.utils.LanguageManager
 import cn.lemwood.utils.ThemeManager
 import cn.lemwood.utils.SettingsManager
@@ -30,14 +25,7 @@ class MainActivity : ComponentActivity() {
         NotificationHelper.initNotificationChannel(this)
         
         setContent {
-            LemwoodToolsTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    LemwoodToolsApp()
-                }
-            }
+            LemwoodToolsApp()
         }
     }
 }
