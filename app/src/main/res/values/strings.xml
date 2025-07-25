@@ -25,6 +25,8 @@
     <string name="all_tools">所有工具</string>
     
     <!-- Permissions -->
+    <string name="permission_notifications">通知权限</string>
+    <string name="permission_notifications_desc">用于发送应用通知和提醒</string>
     <string name="permission_storage">存储权限</string>
     <string name="permission_storage_desc">用于保存和读取文件</string>
     <string name="permission_camera">相机权限</string>

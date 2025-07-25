@@ -34,6 +34,13 @@ object PermissionManager {
     
     private val requiredPermissions = listOf(
         Permission(
+            name = "notifications",
+            permission = Manifest.permission.POST_NOTIFICATIONS,
+            nameResId = cn.lemwood.R.string.permission_notifications,
+            descriptionResId = cn.lemwood.R.string.permission_notifications_desc,
+            isRequired = false // 可选权限，用户可以选择是否开启
+        ),
+        Permission(
             name = "storage",
             permission = Manifest.permission.WRITE_EXTERNAL_STORAGE,
             nameResId = cn.lemwood.R.string.permission_storage,

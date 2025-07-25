@@ -18,7 +18,7 @@ object SettingsManager {
     private const val KEY_NOTIFICATIONS = "notifications_enabled"
     private const val KEY_HAPTIC_FEEDBACK = "haptic_feedback_enabled"
     
-    private val _notificationsEnabled = MutableStateFlow(true)
+    private val _notificationsEnabled = MutableStateFlow(false)
     val notificationsEnabled: StateFlow<Boolean> = _notificationsEnabled.asStateFlow()
     
     private val _hapticFeedbackEnabled = MutableStateFlow(true)
@@ -31,7 +31,7 @@ object SettingsManager {
      */
     fun initialize(context: Context) {
         prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        _notificationsEnabled.value = prefs.getBoolean(KEY_NOTIFICATIONS, true)
+        _notificationsEnabled.value = prefs.getBoolean(KEY_NOTIFICATIONS, false)
         _hapticFeedbackEnabled.value = prefs.getBoolean(KEY_HAPTIC_FEEDBACK, true)
     }
     

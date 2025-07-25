@@ -21,7 +21,8 @@ object InitializationManager {
         val totalSteps: Int = 0,
         val steps: List<InitializationStep> = emptyList(),
         val isCompleted: Boolean = false,
-        val hasError: Boolean = false
+        val hasError: Boolean = false,
+        val showPermissionDialog: Boolean = false
     )
     
     private val _initializationState = MutableStateFlow(InitializationState())
@@ -42,8 +43,8 @@ object InitializationManager {
                 steps = initSteps.map { it.copy() }
             )
             
-            // 执行每个初始化步骤
-            initSteps.forEachIndexed { index, step ->
+            // 执行前两个初始化步骤
+            for (index in 0..1) {
                 _initializationState.value = _initializationState.value.copy(
                     currentStep = index
                 )
@@ -51,9 +52,11 @@ object InitializationManager {
                 // 执行具体的初始化逻辑
                 when (index) {
                     0 -> initializeLanguage(context)
-                    1 -> initializePermissions(context)
-                    2 -> initializeTools(context)
-                    3 -> initializeCache(context)
+                    1 -> {
+                        initializePermissions(context)
+                        // 权限步骤会显示对话框，暂停在这里
+                        return
+                    }
                 }
                 
                 // 标记当前步骤完成
@@ -67,11 +70,6 @@ object InitializationManager {
                 // 模拟处理时间
                 delay(800)
             }
-            
-            // 标记初始化完成
-            _initializationState.value = _initializationState.value.copy(
-                isCompleted = true
-            )
             
         } catch (e: Exception) {
             // 处理错误
@@ -98,6 +96,69 @@ object InitializationManager {
         // 初始化权限管理
         delay(600)
         PermissionManager.initialize(context)
+        
+        // 初始化通知渠道
+        NotificationHelper.initNotificationChannel(context)
+        
+        // 显示权限请求对话框
+        _initializationState.value = _initializationState.value.copy(
+            showPermissionDialog = true
+        )
+        
+        // 等待权限处理完成
+        // 这里会暂停，直到权限对话框被处理
+    }
+    
+    /**
+     * 权限处理完成后调用
+     */
+    fun onPermissionsHandled() {
+        _initializationState.value = _initializationState.value.copy(
+            showPermissionDialog = false
+        )
+    }
+    
+    /**
+     * 继续初始化流程
+     */
+    suspend fun continueInitialization(context: Context) {
+        val currentStep = _initializationState.value.currentStep
+        
+        // 标记当前步骤完成
+        val updatedSteps = _initializationState.value.steps.toMutableList()
+        if (currentStep < updatedSteps.size) {
+            updatedSteps[currentStep] = updatedSteps[currentStep].copy(isCompleted = true)
+        }
+        
+        _initializationState.value = _initializationState.value.copy(
+            steps = updatedSteps
+        )
+        
+        // 继续执行剩余步骤
+        for (index in (currentStep + 1) until initSteps.size) {
+            _initializationState.value = _initializationState.value.copy(
+                currentStep = index
+            )
+            
+            when (index) {
+                2 -> initializeTools(context)
+                3 -> initializeCache(context)
+            }
+            
+            val steps = _initializationState.value.steps.toMutableList()
+            steps[index] = steps[index].copy(isCompleted = true)
+            
+            _initializationState.value = _initializationState.value.copy(
+                steps = steps
+            )
+            
+            delay(800)
+        }
+        
+        // 标记初始化完成
+        _initializationState.value = _initializationState.value.copy(
+            isCompleted = true
+        )
     }
     
     private suspend fun initializeTools(context: Context) {

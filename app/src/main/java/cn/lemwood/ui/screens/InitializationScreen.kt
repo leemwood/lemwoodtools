@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import cn.lemwood.R
 import cn.lemwood.utils.InitializationManager
+import cn.lemwood.ui.components.PermissionRequestDialog
 
 @Composable
 fun InitializationScreen(
@@ -42,6 +43,23 @@ fun InitializationScreen(
             onInitializationComplete()
         }
     }
+    
+    // 权限请求对话框
+    PermissionRequestDialog(
+        showDialog = initState.showPermissionDialog,
+        onDismiss = {
+            InitializationManager.onPermissionsHandled()
+            scope.launch {
+                InitializationManager.continueInitialization(context)
+            }
+        },
+        onPermissionsHandled = {
+            InitializationManager.onPermissionsHandled()
+            scope.launch {
+                InitializationManager.continueInitialization(context)
+            }
+        }
+    )
     
     Surface(
         modifier = Modifier.fillMaxSize(),
