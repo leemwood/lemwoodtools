@@ -10,9 +10,9 @@ import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.whenever
 import org.mockito.kotlin.verify
-import org.mockito.kotlin.anyString
-import org.mockito.kotlin.anyInt
-import org.mockito.kotlin.anyBoolean
+import org.mockito.ArgumentMatchers.anyString
+import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.ArgumentMatchers.anyBoolean
 
 class SettingsManagerTest {
 
@@ -39,7 +39,7 @@ class SettingsManagerTest {
         whenever(mockSharedPreferences.getBoolean(SettingsManager.KEY_NOTIFICATIONS, false)).thenReturn(false)
 
         // 初始化SettingsManager
-        SettingsManager.init(mockContext)
+        SettingsManager.initialize(mockContext)
 
         // 验证通知默认是关闭的
         val isEnabled = SettingsManager.isNotificationsEnabled()
@@ -49,7 +49,7 @@ class SettingsManagerTest {
     @Test
     fun `test setNotificationsEnabled saves correctly`() {
         // 初始化SettingsManager
-        SettingsManager.init(mockContext)
+        SettingsManager.initialize(mockContext)
 
         // 设置通知为启用
         SettingsManager.setNotificationsEnabled(true)

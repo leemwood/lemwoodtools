@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.asStateFlow
  */
 object SettingsManager {
     private const val PREFS_NAME = "app_settings"
-    private const val KEY_NOTIFICATIONS = "notifications_enabled"
+    internal const val KEY_NOTIFICATIONS = "notifications_enabled"
     private const val KEY_HAPTIC_FEEDBACK = "haptic_feedback_enabled"
     
     private val _notificationsEnabled = MutableStateFlow(false)
@@ -33,6 +33,13 @@ object SettingsManager {
         prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         _notificationsEnabled.value = prefs.getBoolean(KEY_NOTIFICATIONS, false)
         _hapticFeedbackEnabled.value = prefs.getBoolean(KEY_HAPTIC_FEEDBACK, true)
+    }
+    
+    /**
+     * 获取通知是否启用
+     */
+    fun isNotificationsEnabled(): Boolean {
+        return _notificationsEnabled.value
     }
     
     /**
