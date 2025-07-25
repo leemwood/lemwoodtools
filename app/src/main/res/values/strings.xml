@@ -22,6 +22,7 @@
     
     <!-- Home Screen -->
     <string name="featured_tools">精选工具</string>
+    <string name="recent_tools">最近使用</string>
     <string name="all_tools">所有工具</string>
     
     <!-- 权限相关 -->

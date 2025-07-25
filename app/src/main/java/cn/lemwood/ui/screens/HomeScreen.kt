@@ -3,6 +3,8 @@ package cn.lemwood.ui.screens
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Build
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -18,8 +20,9 @@ import cn.lemwood.ui.components.ToolCard
 @Composable
 fun HomeScreen(navController: NavController) {
     // 缓存工具数据，避免重复获取
-    val featuredTools = remember { ToolsRepository.getFeaturedTools() }
-    val recentTools = remember { ToolsRepository.getRecentTools() }
+    val allTools = remember { ToolsRepository.getAllTools() }
+    val featuredTools = remember { allTools.take(4) } // 取前4个作为精选工具
+    val recentTools = remember { allTools.takeLast(3) } // 取后3个作为最近工具
     
     LazyColumn(
         modifier = Modifier

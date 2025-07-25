@@ -10,23 +10,21 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import cn.lemwood.data.Tool
+import cn.lemwood.data.ToolItem
 import cn.lemwood.utils.CategoryHelper
 import cn.lemwood.utils.HapticFeedbackHelper
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ToolCard(
-    tool: Tool,
+    tool: ToolItem,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
     
-    // 缓存本地化分类名称，避免重复计算
-    val localizedCategoryName = remember(tool.category) {
-        CategoryHelper.getLocalizedCategoryName(tool.category)
-    }
+    // 获取本地化分类名称
+    val localizedCategoryName = CategoryHelper.getLocalizedCategoryName(tool.category)
     
     // 缓存振动支持检查，避免重复系统调用
     val isVibrationSupported = remember {
