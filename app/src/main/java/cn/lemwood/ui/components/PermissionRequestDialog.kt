@@ -29,6 +29,7 @@ fun PermissionRequestDialog(
 ) {
     val context = LocalContext.current
     val permissionState by PermissionManager.permissionState.collectAsState()
+    var dontShowAgain by remember { mutableStateOf(false) }
     
     // 通知权限请求器
     val notificationPermissionLauncher = rememberLauncherForActivityResult(
@@ -103,12 +104,34 @@ fun PermissionRequestDialog(
                             )
                         }
                     }
+                    
+                    Spacer(modifier = Modifier.height(16.dp))
+                    
+                    // "下次不再弹出"复选框
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Checkbox(
+                            checked = dontShowAgain,
+                            onCheckedChange = { dontShowAgain = it }
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            stringResource(R.string.dont_show_again),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                 }
             },
             confirmButton = {
                 TextButton(
                     onClick = {
-                        onPermissionsHandled()
+                        if (dontShowAgain) {
+                            // 如果用户选择了"下次不再弹出"，则保存设置
+                            onPermissionsHandled()
+                        }
                         onDismiss()
                     }
                 ) {
@@ -116,7 +139,15 @@ fun PermissionRequestDialog(
                 }
             },
             dismissButton = {
-                TextButton(onClick = onDismiss) {
+                TextButton(
+                    onClick = {
+                        if (dontShowAgain) {
+                            // 如果用户选择了"下次不再弹出"，即使是跳过也要保存设置
+                            onPermissionsHandled()
+                        }
+                        onDismiss()
+                    }
+                ) {
                     Text("跳过")
                 }
             }
