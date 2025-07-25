@@ -86,12 +86,24 @@
     <string name="todo_list">Todo List</string>
     
     <!-- Permissions -->
+    <string name="permissions">Permissions</string>
+    <string name="permission_reminders">Permission Reminders</string>
+    <string name="permission_reminders_desc">Show permission request dialog on startup</string>
+    <string name="permission_dialog_title">Permission Request</string>
+    <string name="permission_dialog_message">To better use the app features, please grant the following permissions:</string>
+    <string name="dont_show_again">Don\'t show again on next startup</string>
+    <string name="grant_permissions">Grant Permissions</string>
+    <string name="skip">Skip</string>
+    
+    <!-- Permission names and descriptions -->
+    <string name="permission_notifications">Notification Permission</string>
+    <string name="permission_notifications_desc">Used to send task completion notifications</string>
     <string name="permission_storage">Storage Permission</string>
-    <string name="permission_storage_desc">Used to save and read files</string>
+    <string name="permission_storage_desc">Used to read and save files</string>
     <string name="permission_camera">Camera Permission</string>
-    <string name="permission_camera_desc">Used to scan QR codes and take photos</string>
+    <string name="permission_camera_desc">Used for photo and scanning features</string>
     <string name="permission_location">Location Permission</string>
-    <string name="permission_location_desc">Used to get location information</string>
+    <string name="permission_location_desc">Used to get current location information</string>
     <string name="tool_calculator">Calculator</string>
     <string name="tool_converter">Unit Converter</string>
     <string name="tool_qrcode">QR Code</string>

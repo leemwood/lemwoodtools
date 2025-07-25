@@ -7,6 +7,7 @@ import cn.lemwood.utils.LanguageManager
 import cn.lemwood.utils.ThemeManager
 import cn.lemwood.utils.SettingsManager
 import cn.lemwood.utils.NotificationHelper
+import cn.lemwood.utils.PermissionManager
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,6 +21,9 @@ class MainActivity : ComponentActivity() {
         
         // 初始化设置管理器
         SettingsManager.initialize(this)
+        
+        // 初始化权限管理器
+        PermissionManager.initialize(this)
         
         // 初始化通知渠道
         NotificationHelper.initNotificationChannel(this)

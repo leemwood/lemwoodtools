@@ -3,6 +3,7 @@ package cn.lemwood.utils
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Build
 import androidx.core.content.ContextCompat
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -41,13 +42,6 @@ object PermissionManager {
             isRequired = false // 可选权限，用户可以选择是否开启
         ),
         Permission(
-            name = "storage",
-            permission = Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            nameResId = cn.lemwood.R.string.permission_storage,
-            descriptionResId = cn.lemwood.R.string.permission_storage_desc,
-            isRequired = false // Android 10+ 不再需要此权限
-        ),
-        Permission(
             name = "camera",
             permission = Manifest.permission.CAMERA,
             nameResId = cn.lemwood.R.string.permission_camera,
@@ -64,10 +58,61 @@ object PermissionManager {
     )
     
     /**
+     * 获取存储权限列表（根据Android版本动态确定）
+     */
+    private fun getStoragePermissions(): List<Permission> {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            // Android 13+ 使用新的媒体权限
+            listOf(
+                Permission(
+                    name = "storage_images",
+                    permission = Manifest.permission.READ_MEDIA_IMAGES,
+                    nameResId = cn.lemwood.R.string.permission_storage,
+                    descriptionResId = cn.lemwood.R.string.permission_storage_desc,
+                    isRequired = false
+                ),
+                Permission(
+                    name = "storage_video",
+                    permission = Manifest.permission.READ_MEDIA_VIDEO,
+                    nameResId = cn.lemwood.R.string.permission_storage,
+                    descriptionResId = cn.lemwood.R.string.permission_storage_desc,
+                    isRequired = false
+                ),
+                Permission(
+                    name = "storage_audio",
+                    permission = Manifest.permission.READ_MEDIA_AUDIO,
+                    nameResId = cn.lemwood.R.string.permission_storage,
+                    descriptionResId = cn.lemwood.R.string.permission_storage_desc,
+                    isRequired = false
+                )
+            )
+        } else {
+            // Android 12 及以下使用传统存储权限
+            listOf(
+                Permission(
+                    name = "storage",
+                    permission = Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    nameResId = cn.lemwood.R.string.permission_storage,
+                    descriptionResId = cn.lemwood.R.string.permission_storage_desc,
+                    isRequired = false
+                )
+            )
+        }
+    }
+    
+    /**
+     * 获取所有权限列表（包括动态存储权限）
+     */
+    private fun getAllPermissionsList(): List<Permission> {
+        return requiredPermissions + getStoragePermissions()
+    }
+    
+    /**
      * 初始化权限管理器
      */
     fun initialize(context: Context) {
-        val updatedPermissions = requiredPermissions.map { permission ->
+        val allPermissions = getAllPermissionsList()
+        val updatedPermissions = allPermissions.map { permission ->
             permission.copy(
                 isGranted = ContextCompat.checkSelfPermission(
                     context,
@@ -113,14 +158,14 @@ object PermissionManager {
      * 获取所有权限列表
      */
     fun getAllPermissions(): List<String> {
-        return requiredPermissions.map { it.permission }
+        return getAllPermissionsList().map { it.permission }
     }
     
     /**
      * 获取必需权限列表
      */
     fun getRequiredPermissions(): List<String> {
-        return requiredPermissions
+        return getAllPermissionsList()
             .filter { it.isRequired }
             .map { it.permission }
     }

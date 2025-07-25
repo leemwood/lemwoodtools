@@ -42,6 +42,7 @@ fun SettingsScreen(navController: NavController) {
     val isDarkTheme = rememberIsDarkTheme()
     val enableNotifications = rememberNotificationsEnabled()
     val enableHapticFeedback = rememberHapticFeedbackEnabled()
+    val showPermissionDialog by SettingsManager.showPermissionDialog.collectAsState()
     var showLanguageDialog by remember { mutableStateOf(false) }
     var showFeedbackDialog by remember { mutableStateOf(false) }
     
@@ -213,6 +214,52 @@ fun SettingsScreen(navController: NavController) {
                                     }
                                 } else {
                                     SettingsManager.setNotificationsEnabled(false)
+                                }
+                            }
+                        )
+                    }
+                }
+            }
+        }
+        
+        // 权限提醒设置
+        item {
+            Card(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    Text(
+                        stringResource(R.string.permissions),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                    
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column {
+                            Text(
+                                stringResource(R.string.permission_reminders),
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                            Text(
+                                stringResource(R.string.permission_reminders_desc),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        Switch(
+                            checked = showPermissionDialog,
+                            onCheckedChange = { enabled ->
+                                SettingsManager.setShowPermissionDialog(enabled)
+                                if (enableHapticFeedback && HapticFeedbackHelper.isVibrationSupported(context)) {
+                                    HapticFeedbackHelper.buttonClickVibration(context)
                                 }
                             }
                         )

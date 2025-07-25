@@ -17,12 +17,16 @@ object SettingsManager {
     private const val PREFS_NAME = "app_settings"
     internal const val KEY_NOTIFICATIONS = "notifications_enabled"
     private const val KEY_HAPTIC_FEEDBACK = "haptic_feedback_enabled"
+    private const val KEY_SHOW_PERMISSION_DIALOG = "show_permission_dialog"
     
     private val _notificationsEnabled = MutableStateFlow(false)
     val notificationsEnabled: StateFlow<Boolean> = _notificationsEnabled.asStateFlow()
     
     private val _hapticFeedbackEnabled = MutableStateFlow(true)
     val hapticFeedbackEnabled: StateFlow<Boolean> = _hapticFeedbackEnabled.asStateFlow()
+    
+    private val _showPermissionDialog = MutableStateFlow(true)
+    val showPermissionDialog: StateFlow<Boolean> = _showPermissionDialog.asStateFlow()
     
     private lateinit var prefs: SharedPreferences
     
@@ -33,6 +37,7 @@ object SettingsManager {
         prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         _notificationsEnabled.value = prefs.getBoolean(KEY_NOTIFICATIONS, false)
         _hapticFeedbackEnabled.value = prefs.getBoolean(KEY_HAPTIC_FEEDBACK, true)
+        _showPermissionDialog.value = prefs.getBoolean(KEY_SHOW_PERMISSION_DIALOG, true)
     }
     
     /**
@@ -56,6 +61,14 @@ object SettingsManager {
     fun setHapticFeedbackEnabled(enabled: Boolean) {
         _hapticFeedbackEnabled.value = enabled
         prefs.edit().putBoolean(KEY_HAPTIC_FEEDBACK, enabled).apply()
+    }
+    
+    /**
+     * 设置是否显示权限对话框
+     */
+    fun setShowPermissionDialog(show: Boolean) {
+        _showPermissionDialog.value = show
+        prefs.edit().putBoolean(KEY_SHOW_PERMISSION_DIALOG, show).apply()
     }
     
     /**

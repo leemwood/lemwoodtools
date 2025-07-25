@@ -15,11 +15,13 @@ import cn.lemwood.navigation.Screen
 import cn.lemwood.navigation.bottomNavItems
 import cn.lemwood.ui.components.BottomNavigationBar
 import cn.lemwood.ui.components.TopAppBarWithMenu
+import cn.lemwood.ui.components.PermissionRequestDialog
 import cn.lemwood.ui.screens.*
 import cn.lemwood.ui.theme.LemwoodToolsTheme
 import cn.lemwood.utils.InitializationManager
 import cn.lemwood.utils.ThemeManager
 import cn.lemwood.utils.SettingsManager
+import cn.lemwood.utils.PermissionManager
 import cn.lemwood.utils.rememberIsDarkTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,10 +39,19 @@ fun LemwoodToolsApp() {
         val initState by InitializationManager.initializationState.collectAsState()
         var showInitialization by remember { mutableStateOf(true) }
         
-        // 当初始化完成时，隐藏初始化界面
+        // 权限对话框状态
+        val showPermissionDialog by SettingsManager.showPermissionDialog.collectAsState()
+        val permissionState by PermissionManager.permissionState.collectAsState()
+        var showPermissionRequest by remember { mutableStateOf(false) }
+        
+        // 当初始化完成时，隐藏初始化界面并检查是否需要显示权限对话框
         LaunchedEffect(initState.isCompleted) {
             if (initState.isCompleted) {
                 showInitialization = false
+                // 检查是否需要显示权限对话框
+                if (showPermissionDialog && !PermissionManager.areAllRequiredPermissionsGranted()) {
+                    showPermissionRequest = true
+                }
             }
         }
     
@@ -122,6 +133,17 @@ fun LemwoodToolsApp() {
                 composable("password_generator") { PlaceholderScreen("密码生成器") }
                 composable("todo_list") { PlaceholderScreen("待办事项") }
             }
+        }
+        
+        // 权限请求对话框
+        if (showPermissionRequest) {
+            PermissionRequestDialog(
+                onDismiss = { showPermissionRequest = false },
+                onDontShowAgain = {
+                    SettingsManager.setShowPermissionDialog(false)
+                    showPermissionRequest = false
+                }
+            )
         }
     }
 }

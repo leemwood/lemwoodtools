@@ -24,15 +24,25 @@
     <string name="featured_tools">精选工具</string>
     <string name="all_tools">所有工具</string>
     
-    <!-- Permissions -->
+    <!-- 权限相关 -->
+    <string name="permissions">权限</string>
+    <string name="permission_reminders">权限提醒</string>
+    <string name="permission_reminders_desc">启动时显示权限请求对话框</string>
+    <string name="permission_dialog_title">权限请求</string>
+    <string name="permission_dialog_message">为了更好地使用应用功能，请授予以下权限：</string>
+    <string name="dont_show_again">下次启动不再弹出</string>
+    <string name="grant_permissions">授予权限</string>
+    <string name="skip">跳过</string>
+    
+    <!-- 权限名称和描述 -->
     <string name="permission_notifications">通知权限</string>
-    <string name="permission_notifications_desc">用于发送应用通知和提醒</string>
+    <string name="permission_notifications_desc">用于发送任务完成通知</string>
     <string name="permission_storage">存储权限</string>
-    <string name="permission_storage_desc">用于保存和读取文件</string>
+    <string name="permission_storage_desc">用于读取和保存文件</string>
     <string name="permission_camera">相机权限</string>
-    <string name="permission_camera_desc">用于扫描二维码和拍照</string>
+    <string name="permission_camera_desc">用于拍照和扫描功能</string>
     <string name="permission_location">位置权限</string>
-    <string name="permission_location_desc">用于获取位置信息</string>
+    <string name="permission_location_desc">用于获取当前位置信息</string>
     
     <!-- 工具名称 -->
     <string name="tool_calculator">计算器</string>
