@@ -44,13 +44,7 @@ fun ToolsScreen(navController: NavController) {
         }
     }
     
-    val selectedCategoryDisplayName = remember(selectedCategoryKey, allCategoryText) {
-        if (selectedCategoryKey.isEmpty()) {
-            allCategoryText
-        } else {
-            CategoryHelper.getLocalizedCategoryName(selectedCategoryKey)
-        }
-    }
+
     
     Column(
         modifier = Modifier
@@ -71,7 +65,14 @@ fun ToolsScreen(navController: NavController) {
             
             FilterChip(
                 onClick = { showFilterDialog = true },
-                label = { Text(selectedCategoryDisplayName) },
+                label = { 
+                    val displayName = if (selectedCategoryKey.isEmpty()) {
+                        allCategoryText
+                    } else {
+                        CategoryHelper.getLocalizedCategoryName(selectedCategoryKey)
+                    }
+                    Text(displayName)
+                },
                 selected = selectedCategoryKey.isNotEmpty(),
                 leadingIcon = {
                     Icon(
