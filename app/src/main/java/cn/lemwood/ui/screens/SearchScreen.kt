@@ -30,11 +30,19 @@ fun SearchScreen(navController: NavController) {
     val context = LocalContext.current
     val enableHapticFeedback = rememberHapticFeedbackEnabled()
     
-    val searchResults = remember(searchQuery) {
-        if (searchQuery.isBlank()) {
-            emptyList()
-        } else {
-            ToolsRepository.searchTools(searchQuery)
+    // 缓存振动支持检查结果
+    val isVibrationSupported = remember {
+        HapticFeedbackHelper.isVibrationSupported(context)
+    }
+    
+    // 优化搜索结果计算，使用derivedStateOf减少重组
+    val searchResults by remember {
+        derivedStateOf {
+            if (searchQuery.isBlank()) {
+                emptyList()
+            } else {
+                ToolsRepository.searchTools(searchQuery)
+            }
         }
     }
     
@@ -59,7 +67,8 @@ fun SearchScreen(navController: NavController) {
                 if (searchQuery.isNotEmpty()) {
                     IconButton(
                         onClick = { 
-                            if (enableHapticFeedback && HapticFeedbackHelper.isVibrationSupported(context)) {
+                            // 优化振动反馈调用
+                            if (enableHapticFeedback && isVibrationSupported) {
                                 HapticFeedbackHelper.buttonClickVibration(context)
                             }
                             searchQuery = "" 
@@ -79,69 +88,76 @@ fun SearchScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(16.dp))
         
         // 搜索结果
-        if (searchQuery.isBlank()) {
-            // 空状态
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
+        when {
+            searchQuery.isBlank() -> {
+                // 空状态
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Icon(
-                        Icons.Default.Search,
-                        contentDescription = null,
-                        modifier = Modifier.size(64.dp),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Text(
-                        stringResource(R.string.search_hint),
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-        } else if (searchResults.isEmpty()) {
-            // 无结果状态
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        stringResource(R.string.no_results),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Medium
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        stringResource(R.string.try_different_keywords),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-        } else {
-            // 搜索结果列表
-            Column {
-                Text(
-                    stringResource(R.string.search_results_count, searchResults.size),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-                
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    items(searchResults) { tool ->
-                        ToolCard(
-                            tool = tool,
-                            onClick = { navController.navigate(tool.route) }
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            Icons.Default.Search,
+                            contentDescription = null,
+                            modifier = Modifier.size(64.dp),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                         )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            stringResource(R.string.search_hint),
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
+            searchResults.isEmpty() -> {
+                // 无结果状态
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            stringResource(R.string.no_results),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Medium
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            stringResource(R.string.try_different_keywords),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
+            else -> {
+                // 搜索结果列表
+                Column {
+                    Text(
+                        stringResource(R.string.search_results_count, searchResults.size),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                    
+                    LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        items(
+                            items = searchResults,
+                            key = { it.id } // 添加key以优化重组性能
+                        ) { tool ->
+                            ToolCard(
+                                tool = tool,
+                                onClick = { navController.navigate(tool.route) }
+                            )
+                        }
                     }
                 }
             }

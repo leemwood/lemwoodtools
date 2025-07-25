@@ -25,19 +25,33 @@ fun ToolsScreen(navController: NavController) {
     var selectedCategoryKey by remember { mutableStateOf("") } // 使用空字符串表示"全部"
     var showFilterDialog by remember { mutableStateOf(false) }
     
-    val categoryMap = CategoryHelper.getCategoryMap()
-    val categories = listOf("" to allCategoryText) + categoryMap.toList()
-    
-    val filteredTools = if (selectedCategoryKey.isEmpty()) {
-        ToolsRepository.getAllTools()
-    } else {
-        ToolsRepository.getToolsByCategory()[selectedCategoryKey] ?: emptyList()
+    // 缓存分类映射，避免重复计算
+    val categoryMap = remember { CategoryHelper.getCategoryMap() }
+    val categories = remember(allCategoryText) { 
+        listOf("" to allCategoryText) + categoryMap.toList() 
     }
     
-    val selectedCategoryDisplayName = if (selectedCategoryKey.isEmpty()) {
-        allCategoryText
-    } else {
-        CategoryHelper.getLocalizedCategoryName(selectedCategoryKey)
+    // 缓存所有工具列表，避免重复获取
+    val allTools = remember { ToolsRepository.getAllTools() }
+    val toolsByCategory = remember { ToolsRepository.getToolsByCategory() }
+    
+    // 使用derivedStateOf优化过滤逻辑
+    val filteredTools by remember {
+        derivedStateOf {
+            if (selectedCategoryKey.isEmpty()) {
+                allTools
+            } else {
+                toolsByCategory[selectedCategoryKey] ?: emptyList()
+            }
+        }
+    }
+    
+    val selectedCategoryDisplayName = remember(selectedCategoryKey, allCategoryText) {
+        if (selectedCategoryKey.isEmpty()) {
+            allCategoryText
+        } else {
+            CategoryHelper.getLocalizedCategoryName(selectedCategoryKey)
+        }
     }
     
     Column(
@@ -76,7 +90,10 @@ fun ToolsScreen(navController: NavController) {
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(filteredTools) { tool ->
+            items(
+                items = filteredTools,
+                key = { it.id } // 添加key以优化重组性能
+            ) { tool ->
                 ToolCard(
                     tool = tool,
                     onClick = { navController.navigate(tool.route) }
@@ -92,7 +109,10 @@ fun ToolsScreen(navController: NavController) {
             title = { Text(stringResource(R.string.select_category)) },
             text = {
                 LazyColumn {
-                    items(categories) { (categoryKey, categoryName) ->
+                    items(
+                        items = categories,
+                        key = { it.first } // 添加key优化性能
+                    ) { (categoryKey, categoryName) ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()

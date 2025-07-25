@@ -3,8 +3,6 @@ package cn.lemwood.ui.screens
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -17,10 +15,11 @@ import cn.lemwood.R
 import cn.lemwood.data.ToolsRepository
 import cn.lemwood.ui.components.ToolCard
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavController) {
-    val featuredTools = ToolsRepository.getAllTools().take(4)
+    // 缓存工具数据，避免重复获取
+    val featuredTools = remember { ToolsRepository.getFeaturedTools() }
+    val recentTools = remember { ToolsRepository.getRecentTools() }
     
     LazyColumn(
         modifier = Modifier
@@ -28,32 +27,68 @@ fun HomeScreen(navController: NavController) {
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // 欢迎卡片
+        // 欢迎文本
         item {
-            WelcomeCard()
+            Column {
+                Text(
+                    stringResource(R.string.welcome_title),
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    stringResource(R.string.welcome_subtitle),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
         
-        // 推荐工具标题
-        item {
-            Text(
-                stringResource(R.string.featured_tools),
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface
-            )
+        // 推荐工具部分
+        if (featuredTools.isNotEmpty()) {
+            item {
+                Text(
+                    stringResource(R.string.featured_tools),
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
+            
+            items(
+                items = featuredTools,
+                key = { it.id } // 添加key优化性能
+            ) { tool ->
+                ToolCard(
+                    tool = tool,
+                    onClick = { navController.navigate(tool.route) }
+                )
+            }
         }
         
-        // 推荐工具列表
-        items(featuredTools) { tool ->
-            ToolCard(
-                tool = tool,
-                onClick = { navController.navigate(tool.route) }
-            )
+        // 最近使用工具部分
+        if (recentTools.isNotEmpty()) {
+            item {
+                Text(
+                    stringResource(R.string.recent_tools),
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
+            
+            items(
+                items = recentTools,
+                key = { it.id } // 添加key优化性能
+            ) { tool ->
+                ToolCard(
+                    tool = tool,
+                    onClick = { navController.navigate(tool.route) }
+                )
+            }
         }
         
-        // 统计信息
+        // 底部间距
         item {
-            StatsCard()
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }

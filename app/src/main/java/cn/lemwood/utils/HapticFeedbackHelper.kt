@@ -17,11 +17,11 @@ object HapticFeedbackHelper {
      */
     private fun getVibrator(context: Context): Vibrator? {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val vibratorManager = context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
-            vibratorManager.defaultVibrator
+            val vibratorManager = context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as? VibratorManager
+            vibratorManager?.defaultVibrator
         } else {
             @Suppress("DEPRECATION")
-            context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            context.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
         }
     }
     
@@ -44,9 +44,9 @@ object HapticFeedbackHelper {
      * 轻微振动反馈（按钮点击）
      */
     fun lightVibration(context: Context) {
-        if (!SettingsManager.hapticFeedbackEnabled.value || !hasVibrator(context)) {
-            return
-        }
+        // 优化：先检查设置，再检查硬件支持
+        if (!SettingsManager.hapticFeedbackEnabled.value) return
+        if (!hasVibrator(context)) return
         
         val vibrator = getVibrator(context) ?: return
         
@@ -62,9 +62,9 @@ object HapticFeedbackHelper {
      * 中等振动反馈（成功操作）
      */
     fun mediumVibration(context: Context) {
-        if (!SettingsManager.hapticFeedbackEnabled.value || !hasVibrator(context)) {
-            return
-        }
+        // 优化：先检查设置，再检查硬件支持
+        if (!SettingsManager.hapticFeedbackEnabled.value) return
+        if (!hasVibrator(context)) return
         
         val vibrator = getVibrator(context) ?: return
         
@@ -80,9 +80,9 @@ object HapticFeedbackHelper {
      * 强烈振动反馈（错误或警告）
      */
     fun strongVibration(context: Context) {
-        if (!SettingsManager.hapticFeedbackEnabled.value || !hasVibrator(context)) {
-            return
-        }
+        // 优化：先检查设置，再检查硬件支持
+        if (!SettingsManager.hapticFeedbackEnabled.value) return
+        if (!hasVibrator(context)) return
         
         val vibrator = getVibrator(context) ?: return
         
@@ -98,9 +98,9 @@ object HapticFeedbackHelper {
      * 双击振动反馈（特殊操作）
      */
     fun doubleVibration(context: Context) {
-        if (!SettingsManager.hapticFeedbackEnabled.value || !hasVibrator(context)) {
-            return
-        }
+        // 优化：先检查设置，再检查硬件支持
+        if (!SettingsManager.hapticFeedbackEnabled.value) return
+        if (!hasVibrator(context)) return
         
         val vibrator = getVibrator(context) ?: return
         
