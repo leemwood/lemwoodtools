@@ -26,10 +26,8 @@ fun ToolsScreen(navController: NavController) {
     var showFilterDialog by remember { mutableStateOf(false) }
     
     // 缓存分类映射，避免重复计算
-    val categoryMap = remember { CategoryHelper.getCategoryMap() }
-    val categories = remember(allCategoryText) { 
-        listOf("" to allCategoryText) + categoryMap.toList() 
-    }
+    val categoryMap = CategoryHelper.getCategoryMap()
+    val categories = listOf("" to allCategoryText) + categoryMap.toList()
     
     // 缓存所有工具列表，避免重复获取
     val allTools = remember { ToolsRepository.getAllTools() }
