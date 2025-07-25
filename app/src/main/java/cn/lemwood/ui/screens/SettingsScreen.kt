@@ -43,6 +43,7 @@ fun SettingsScreen(navController: NavController) {
     val enableNotifications = rememberNotificationsEnabled()
     val enableHapticFeedback = rememberHapticFeedbackEnabled()
     var showLanguageDialog by remember { mutableStateOf(false) }
+    var showFeedbackDialog by remember { mutableStateOf(false) }
     
     // 通知权限请求
     val notificationPermissionLauncher = rememberLauncherForActivityResult(
@@ -399,7 +400,7 @@ fun SettingsScreen(navController: NavController) {
                             HapticFeedbackHelper.buttonClickVibration(context)
                         }
                         
-                        FeedbackUtils.sendEmailFeedback(context)
+                        showFeedbackDialog = true
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {
@@ -437,6 +438,21 @@ fun SettingsScreen(navController: NavController) {
         }
     }
     
+    // 反馈选项对话框
+    if (showFeedbackDialog) {
+        FeedbackOptionsDialog(
+            onDismiss = { showFeedbackDialog = false },
+            onQQSelected = {
+                FeedbackUtils.contactQQ(context)
+                showFeedbackDialog = false
+            },
+            onGitHubSelected = {
+                FeedbackUtils.openGitHubIssues(context)
+                showFeedbackDialog = false
+            }
+        )
+    }
+    
     // 语言选择对话框
     if (showLanguageDialog) {
         LanguageSelectionDialog(
@@ -448,6 +464,115 @@ fun SettingsScreen(navController: NavController) {
             onDismiss = { showLanguageDialog = false }
         )
     }
+}
+
+/**
+ * 反馈选项对话框
+ */
+@Composable
+private fun FeedbackOptionsDialog(
+    onDismiss: () -> Unit,
+    onQQSelected: () -> Unit,
+    onGitHubSelected: () -> Unit
+) {
+    val context = LocalContext.current
+    val enableHapticFeedback = rememberHapticFeedbackEnabled()
+    
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(
+                text = stringResource(R.string.choose_feedback_method),
+                style = MaterialTheme.typography.headlineSmall
+            )
+        },
+        text = {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                // QQ反馈选项
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = {
+                        if (enableHapticFeedback && HapticFeedbackHelper.isVibrationSupported(context)) {
+                            HapticFeedbackHelper.buttonClickVibration(context)
+                        }
+                        onQQSelected()
+                    }
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            Icons.Default.Chat,
+                            contentDescription = null,
+                            modifier = Modifier.size(24.dp),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Column {
+                            Text(
+                                text = stringResource(R.string.feedback_qq),
+                                style = MaterialTheme.typography.bodyLarge,
+                                fontWeight = FontWeight.Medium
+                            )
+                            Text(
+                                text = "QQ: 3436464181",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                }
+                
+                // GitHub反馈选项
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = {
+                        if (enableHapticFeedback && HapticFeedbackHelper.isVibrationSupported(context)) {
+                            HapticFeedbackHelper.buttonClickVibration(context)
+                        }
+                        onGitHubSelected()
+                    }
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            Icons.Default.Code,
+                            contentDescription = null,
+                            modifier = Modifier.size(24.dp),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Column {
+                            Text(
+                                text = stringResource(R.string.feedback_github_issues),
+                                style = MaterialTheme.typography.bodyLarge,
+                                fontWeight = FontWeight.Medium
+                            )
+                            Text(
+                                text = "GitHub Issues",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        }
+    )
 }
 
 /**

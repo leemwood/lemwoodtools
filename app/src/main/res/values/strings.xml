@@ -124,6 +124,12 @@
     <string name="developer">开发者</string>
     <string name="clear_cache">清除缓存</string>
     <string name="feedback">意见反馈</string>
+    <string name="feedback_options">反馈方式</string>
+    <string name="feedback_qq">QQ联系</string>
+    <string name="feedback_github">GitHub反馈</string>
+    <string name="feedback_github_issues">GitHub Issues</string>
+    <string name="feedback_github_repo">GitHub仓库</string>
+    <string name="choose_feedback_method">选择反馈方式</string>
     
     <!-- 搜索相关 -->
     
@@ -133,7 +139,6 @@
     <string name="categories">分类数量</string>
     <string name="ok">确定</string>
     <string name="cancel">取消</string>
-    <string name="no_email_app">未找到邮件应用</string>
     <string name="feedback_error">反馈功能暂时不可用</string>
     <string name="cache_cleared">缓存已清除</string>
     <string name="cache_clear_error">清除缓存失败</string>
