@@ -56,7 +56,7 @@ fun ToolCard(
                     modifier = Modifier.weight(1f)
                 ) {
                     Text(
-                        text = tool.name,
+                        text = tool.title,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         maxLines = 1,
