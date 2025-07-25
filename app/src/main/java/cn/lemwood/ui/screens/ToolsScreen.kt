@@ -36,13 +36,11 @@ fun ToolsScreen(navController: NavController) {
     val toolsByCategory = remember { ToolsRepository.getToolsByCategory() }
     
     // 使用derivedStateOf优化过滤逻辑
-    val filteredTools by remember {
-        derivedStateOf {
-            if (selectedCategoryKey.isEmpty()) {
-                allTools
-            } else {
-                toolsByCategory[selectedCategoryKey] ?: emptyList()
-            }
+    val filteredTools by derivedStateOf {
+        if (selectedCategoryKey.isEmpty()) {
+            allTools
+        } else {
+            toolsByCategory[selectedCategoryKey] ?: emptyList()
         }
     }
     
