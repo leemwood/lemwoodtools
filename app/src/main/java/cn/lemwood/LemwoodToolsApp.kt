@@ -140,7 +140,7 @@ fun LemwoodToolsApp() {
             showDialog = showPermissionRequest,
             onDismiss = { showPermissionRequest = false },
             onPermissionsHandled = {
-                SettingsManager.setShowPermissionDialog(false)
+                // 此处无需操作，逻辑已移至 PermissionRequestDialog
             }
         )
     }

@@ -129,26 +129,26 @@ fun PermissionRequestDialog(
                 TextButton(
                     onClick = {
                         if (dontShowAgain) {
-                            // 如果用户选择了"下次不再弹出"，则保存设置
-                            onPermissionsHandled()
+                            cn.lemwood.utils.SettingsManager.setShowPermissionDialog(false)
                         }
+                        onPermissionsHandled()
                         onDismiss()
                     }
                 ) {
-                    Text("继续")
+                    Text(stringResource(R.string.grant_permissions))
                 }
             },
             dismissButton = {
                 TextButton(
                     onClick = {
                         if (dontShowAgain) {
-                            // 如果用户选择了"下次不再弹出"，即使是跳过也要保存设置
-                            onPermissionsHandled()
+                            cn.lemwood.utils.SettingsManager.setShowPermissionDialog(false)
                         }
+                        onPermissionsHandled()
                         onDismiss()
                     }
                 ) {
-                    Text("跳过")
+                    Text(stringResource(R.string.skip))
                 }
             }
         )
