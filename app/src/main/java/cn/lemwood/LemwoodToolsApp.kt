@@ -136,14 +136,12 @@ fun LemwoodToolsApp() {
         }
         
         // 权限请求对话框
-        if (showPermissionRequest) {
-            PermissionRequestDialog(
-                onDismiss = { showPermissionRequest = false },
-                onDontShowAgain = {
-                    SettingsManager.setShowPermissionDialog(false)
-                    showPermissionRequest = false
-                }
-            )
-        }
+        PermissionRequestDialog(
+            showDialog = showPermissionRequest,
+            onDismiss = { showPermissionRequest = false },
+            onPermissionsHandled = {
+                SettingsManager.setShowPermissionDialog(false)
+            }
+        )
     }
 }
