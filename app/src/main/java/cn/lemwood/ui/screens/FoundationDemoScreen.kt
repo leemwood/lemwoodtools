@@ -5,6 +5,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -12,9 +13,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import cn.lemwood.data.ToolItem
 import cn.lemwood.ui.components.ToolCardFoundation
-import cn.lemwood.ui.foundation.components.FoundationButton
-import cn.lemwood.ui.foundation.components.FoundationCard
-import cn.lemwood.ui.foundation.components.FoundationText
+import cn.lemwood.ui.foundation.components.*
 import cn.lemwood.ui.foundation.theme.FoundationTheme
 
 @Composable
@@ -47,6 +46,11 @@ fun FoundationDemoScreen(
             )
         )
     }
+    
+    // 状态变量
+    var switchChecked by remember { mutableStateOf(false) }
+    var checkboxChecked by remember { mutableStateOf(false) }
+    var textFieldValue by remember { mutableStateOf("") }
     
     LazyColumn(
         modifier = modifier
@@ -122,6 +126,146 @@ fun FoundationDemoScreen(
                             FoundationText(
                                 text = "禁用按钮",
                                 color = FoundationTheme.colors.onSurface.copy(alpha = 0.38f)
+                            )
+                        }
+                    }
+                }
+            }
+        }
+        
+        item {
+            // 图标按钮演示
+            FoundationCard(
+                modifier = Modifier.fillMaxWidth(),
+                elevation = 4.dp
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    FoundationText(
+                        text = "图标按钮演示",
+                        style = FoundationTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Medium,
+                        color = FoundationTheme.colors.onSurface
+                    )
+                    
+                    Spacer(modifier = Modifier.height(12.dp))
+                    
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        FoundationIconButton(
+                            onClick = { }
+                        ) {
+                            Icon(
+                                Icons.Default.Favorite,
+                                contentDescription = "喜欢",
+                                tint = FoundationTheme.colors.primary
+                            )
+                        }
+                        
+                        FoundationFilledIconButton(
+                            onClick = { }
+                        ) {
+                            Icon(
+                                Icons.Default.Add,
+                                contentDescription = "添加"
+                            )
+                        }
+                        
+                        FoundationOutlinedIconButton(
+                            onClick = { }
+                        ) {
+                            Icon(
+                                Icons.Default.Settings,
+                                contentDescription = "设置"
+                            )
+                        }
+                        
+                        FoundationSmallFloatingActionButton(
+                            onClick = { }
+                        ) {
+                            Icon(
+                                Icons.Default.Edit,
+                                contentDescription = "编辑"
+                            )
+                        }
+                    }
+                }
+            }
+        }
+        
+        item {
+            // 输入控件演示
+            FoundationCard(
+                modifier = Modifier.fillMaxWidth(),
+                elevation = 4.dp
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    FoundationText(
+                        text = "输入控件演示",
+                        style = FoundationTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Medium,
+                        color = FoundationTheme.colors.onSurface
+                    )
+                    
+                    Spacer(modifier = Modifier.height(12.dp))
+                    
+                    FoundationTextField(
+                        value = textFieldValue,
+                        onValueChange = { textFieldValue = it },
+                        modifier = Modifier.fillMaxWidth(),
+                        placeholder = {
+                            FoundationText(
+                                text = "请输入文本...",
+                                color = FoundationTheme.colors.onSurfaceVariant
+                            )
+                        },
+                        leadingIcon = {
+                            Icon(
+                                Icons.Default.Search,
+                                contentDescription = "搜索",
+                                tint = FoundationTheme.colors.onSurfaceVariant
+                            )
+                        }
+                    )
+                    
+                    Spacer(modifier = Modifier.height(16.dp))
+                    
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            FoundationSwitch(
+                                checked = switchChecked,
+                                onCheckedChange = { switchChecked = it }
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            FoundationText(
+                                text = "开关",
+                                style = FoundationTheme.typography.bodyMedium
+                            )
+                        }
+                        
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            FoundationCheckbox(
+                                checked = checkboxChecked,
+                                onCheckedChange = { checkboxChecked = it }
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            FoundationText(
+                                text = "复选框",
+                                style = FoundationTheme.typography.bodyMedium
                             )
                         }
                     }
