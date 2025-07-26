@@ -32,20 +32,16 @@
         android:pathData="M58,18C60,15 60,12 58,10C56,12 56,15 58,18Z"/>
     
     <!-- 工具图标 -->
-    <circle android:fillColor="#ffffff"
+    <path android:fillColor="#ffffff"
         android:fillAlpha="0.9"
-        cx="45"
-        cy="78"
-        r="4"/>
+        android:pathData="M45,78 m-4,0 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0"/>
     <path 
         android:fillColor="#333333"
         android:pathData="M43.5,76.5 h3 v3 h-3 z"/>
-    
-    <circle android:fillColor="#ffffff"
+
+    <path android:fillColor="#ffffff"
         android:fillAlpha="0.9"
-        cx="63"
-        cy="78"
-        r="4"/>
+        android:pathData="M63,78 m-4,0 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0"/>
     <path android:strokeColor="#333333"
         android:strokeWidth="1.5"
         android:fillColor="@android:color/transparent"
