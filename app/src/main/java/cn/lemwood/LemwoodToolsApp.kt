@@ -132,6 +132,11 @@ fun LemwoodToolsApp() {
                 composable("timestamp_converter") { PlaceholderScreen("时间戳转换器") }
                 composable("password_generator") { PlaceholderScreen("密码生成器") }
                 composable("todo_list") { PlaceholderScreen("待办事项") }
+                
+                // Foundation UI 演示页面
+                composable("foundation_demo") { 
+                    FoundationDemoScreen() 
+                }
             }
         }
         

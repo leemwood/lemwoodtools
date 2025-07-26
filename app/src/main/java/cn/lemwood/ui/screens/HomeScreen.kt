@@ -44,6 +44,16 @@ fun HomeScreen(navController: NavController) {
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+                
+                Spacer(modifier = Modifier.height(16.dp))
+                
+                // Foundation UI 演示按钮
+                Button(
+                    onClick = { navController.navigate("foundation_demo") },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("查看 Foundation UI 演示")
+                }
             }
         }
         
