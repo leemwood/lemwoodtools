@@ -18,7 +18,8 @@ import cn.lemwood.ui.foundation.theme.FoundationTheme
 
 @Composable
 fun FoundationDemoScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: androidx.navigation.NavController? = null
 ) {
     // 示例工具数据
     val sampleTools = remember {
@@ -83,6 +84,72 @@ fun FoundationDemoScreen(
                         color = FoundationTheme.colors.onSurfaceVariant
                     )
                 }
+        
+        // 导航按钮卡片
+        if (navController != null) {
+            item {
+                FoundationCard(
+                    modifier = Modifier.fillMaxWidth(),
+                    elevation = 4.dp
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        FoundationText(
+                            text = "Foundation UI 实际应用",
+                            style = FoundationTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Medium,
+                            color = FoundationTheme.colors.onSurface
+                        )
+                        
+                        Spacer(modifier = Modifier.height(12.dp))
+                        
+                        FoundationText(
+                            text = "体验使用Foundation组件重构的主要屏幕",
+                            style = FoundationTheme.typography.bodyMedium,
+                            color = FoundationTheme.colors.onSurfaceVariant
+                        )
+                        
+                        Spacer(modifier = Modifier.height(16.dp))
+                        
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            FoundationButton(
+                                onClick = { navController.navigate("home_foundation") },
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                FoundationText(
+                                    text = "首页",
+                                    color = FoundationTheme.colors.onPrimary
+                                )
+                            }
+                            
+                            FoundationOutlinedButton(
+                                onClick = { navController.navigate("tools_foundation") },
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                FoundationText(
+                                    text = "工具",
+                                    color = FoundationTheme.colors.primary
+                                )
+                            }
+                            
+                            FoundationOutlinedButton(
+                                onClick = { navController.navigate("search_foundation") },
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                FoundationText(
+                                    text = "搜索",
+                                    color = FoundationTheme.colors.primary
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
             }
         }
         

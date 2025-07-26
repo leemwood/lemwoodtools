@@ -134,8 +134,19 @@ fun LemwoodToolsApp() {
                 composable("todo_list") { PlaceholderScreen("待办事项") }
                 
                 // Foundation UI 演示页面
-                composable("foundation_demo") { 
-                    FoundationDemoScreen() 
+                composable("foundation_demo") {
+            FoundationDemoScreen(navController = navController)
+        }
+                
+                // Foundation UI 版本的主要屏幕
+                composable("home_foundation") { 
+                    HomeScreenFoundation(navController = navController) 
+                }
+                composable("tools_foundation") { 
+                    ToolsScreenFoundation(navController = navController) 
+                }
+                composable("search_foundation") { 
+                    SearchScreenFoundation(navController = navController) 
                 }
             }
         }
