@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <circle cx="24" cy="24" r="22" fill="url(#grad1)" stroke="#fff" stroke-width="2"/>
+  <ellipse cx="24" cy="24" rx="11" ry="15" fill="#FFD700" stroke="#FFA500" stroke-width="0.8"/>
+  <path d="M 17 20 Q 24 17 31 20" stroke="#FFA500" stroke-width="0.6" fill="none"/>
+  <path d="M 17 24 Q 24 21 31 24" stroke="#FFA500" stroke-width="0.6" fill="none"/>
+  <path d="M 17 28 Q 24 25 31 28" stroke="#FFA500" stroke-width="0.6" fill="none"/>
+  <ellipse cx="24" cy="11" rx="2" ry="3" fill="#4CAF50" transform="rotate(-15 24 11)"/>
+  <ellipse cx="24" cy="11" rx="2" ry="3" fill="#4CAF50" transform="rotate(15 24 11)"/>
+  <circle cx="19" cy="33" r="2" fill="#fff" opacity="0.9"/>
+  <rect x="18" y="32" width="2" height="2" fill="#333"/>
+  <circle cx="29" cy="33" r="2" fill="#fff" opacity="0.9"/>
+  <path d="M 28 32 L 30 34 M 30 32 L 28 34" stroke="#333" stroke-width="0.6"/>
+</svg>

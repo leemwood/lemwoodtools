@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">柠枺工具箱</string>
+    <string name="loading">加载中...</string>
+    <string name="error_network">网络连接错误</string>
+    <string name="error_loading">加载失败</string>
+    <string name="refresh">刷新</string>
+    <string name="update_available">发现新版本</string>
+    <string name="update_message">有新版本可用，是否立即更新？</string>
+    <string name="update_now">立即更新</string>
+    <string name="update_later">稍后更新</string>
+    <string name="announcement_title">公告</string>
+    <string name="calculator_title">计算器</string>
+    <string name="tools_title">工具</string>
+    <string name="settings_title">设置</string>
+    <string name="about_title">关于</string>
+</resources>
