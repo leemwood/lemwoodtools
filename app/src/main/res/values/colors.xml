@@ -20,4 +20,8 @@
     <color name="md_theme_onBackground">#1C1B1F</color>
     <color name="md_theme_surface">#FFFBFE</color>
     <color name="md_theme_onSurface">#1C1B1F</color>
+    
+    <!-- Legacy color names for compatibility -->
+    <color name="colorPrimary">#6750A4</color>
+    <color name="colorSecondary">#625B71</color>
 </resources>
