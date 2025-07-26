@@ -37,11 +37,9 @@
         cx="45"
         cy="78"
         r="4"/>
-    <rect android:fillColor="#333333"
-        android:width="3"
-        android:height="3"
-        android:x="43.5"
-        android:y="76.5"/>
+    <path 
+        android:fillColor="#333333"
+        android:pathData="M43.5,76.5 h3 v3 h-3 z"/>
     
     <circle android:fillColor="#ffffff"
         android:fillAlpha="0.9"
