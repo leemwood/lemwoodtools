@@ -20,19 +20,4 @@ class WebAppInterface(private val context: Context) {
             "1.0.0"
         }
     }
-    
-    @JavascriptInterface
-    fun vibrate(duration: Long) {
-        // Implementation for device vibration
-    }
-    
-    @JavascriptInterface
-    fun shareText(text: String) {
-        // Implementation for sharing functionality
-    }
-    
-    @JavascriptInterface
-    fun copyToClipboard(text: String) {
-        // Implementation for clipboard functionality
-    }
 }

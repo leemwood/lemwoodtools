@@ -39,34 +39,6 @@
         .header p {
             font-size: 1.1rem;
             opacity: 0.9;
-        }        
-        .nav-tabs {
-            display: flex;
-            background: rgba(255,255,255,0.1);
-            border-radius: 15px;
-            padding: 5px;
-            margin-bottom: 20px;
-            backdrop-filter: blur(10px);
-        }
-        
-        .nav-tab {
-            flex: 1;
-            padding: 12px 20px;
-            text-align: center;
-            color: white;
-            cursor: pointer;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-        
-        .nav-tab.active {
-            background: rgba(255,255,255,0.2);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        
-        .nav-tab:hover {
-            background: rgba(255,255,255,0.15);
         }
         
         .content-area {
@@ -76,131 +48,13 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             backdrop-filter: blur(10px);
             min-height: 400px;
-        }
-        
-        .announcement-item {
-            background: #f8f9fa;
-            border-left: 4px solid #007bff;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        .announcement-title {
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 8px;
-        }
-        
-        .announcement-content {
-            color: #666;
-            line-height: 1.5;
-        }
-        
-        .announcement-date {
-            font-size: 0.9rem;
-            color: #999;
-            margin-top: 8px;
-        }        
-        .calculator {
-            max-width: 350px;
-            margin: 0 auto;
-            background: #333;
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-        }
-        
-        .calculator-display {
-            background: #000;
-            color: white;
-            font-size: 2rem;
-            text-align: right;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            min-height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-        }
-        
-        .calculator-buttons {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-        }
-        
-        .calc-btn {
-            padding: 20px;
-            font-size: 1.2rem;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-weight: 600;
-        }
-        
-        .calc-btn.number {
-            background: #666;
-            color: white;
-        }
-        
-        .calc-btn.operator {
-            background: #ff9500;
-            color: white;
-        }
-        
-        .calc-btn.function {
-            background: #a6a6a6;
-            color: black;
-        }
-        
-        .calc-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-        
-        .calc-btn:active {
-            transform: scale(0.95);
-        }
-        
-        .calc-btn.zero {
-            grid-column: span 2;
-        }        
-        .tools-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-        
-        .tool-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 15px;
             text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         
-        .tool-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        }
-        
-        .tool-icon {
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
-        
-        .tool-name {
-            font-weight: 600;
+        .placeholder-text {
+            color: #666;
+            font-size: 1.2rem;
+            margin-top: 100px;
         }
         
         @media (max-width: 768px) {
@@ -211,23 +65,10 @@
             .header h1 {
                 font-size: 2rem;
             }
-            
-            .calculator {
-                max-width: 100%;
-            }
-            
-            .calc-btn {
-                padding: 15px;
-                font-size: 1rem;
-            }
-            
-            .calculator-display {
-                font-size: 1.5rem;
-                padding: 15px;
-            }
         }
     </style>
-</head><body>
+</head>
+<body>
     <div id="app">
         <div class="app-container">
             <div class="header">
@@ -235,248 +76,28 @@
                 <p>LemwoodTools - 您的多功能工具助手</p>
             </div>
             
-            <div class="nav-tabs">
-                <div class="nav-tab" 
-                     :class="{ active: activeTab === 'announcements' }"
-                     @click="activeTab = 'announcements'">
-                    📢 公告
-                </div>
-                <div class="nav-tab" 
-                     :class="{ active: activeTab === 'calculator' }"
-                     @click="activeTab = 'calculator'">
-                    🧮 计算器
-                </div>
-                <div class="nav-tab" 
-                     :class="{ active: activeTab === 'tools' }"
-                     @click="activeTab = 'tools'">
-                    🛠️ 工具
-                </div>
-                <div class="nav-tab" 
-                     :class="{ active: activeTab === 'about' }"
-                     @click="activeTab = 'about'">
-                    ℹ️ 关于
-                </div>
-            </div>
-            
             <div class="content-area">
-                <!-- 公告页面 -->
-                <div v-if="activeTab === 'announcements'">
-                    <h2>📢 最新公告</h2>
-                    <div v-if="announcements.length === 0" style="text-align: center; color: #666; margin-top: 50px;">
-                        <p>暂无公告</p>
-                    </div>
-                    <div v-for="announcement in announcements" :key="announcement.title" class="announcement-item">
-                        <div class="announcement-title">{{ announcement.title }}</div>
-                        <div class="announcement-content">{{ announcement.content }}</div>
-                        <div class="announcement-date">{{ announcement.date }}</div>
-                    </div>
-                </div>                
-                <!-- 计算器页面 -->
-                <div v-if="activeTab === 'calculator'">
-                    <h2 style="text-align: center; margin-bottom: 20px;">🧮 计算器</h2>
-                    <div class="calculator">
-                        <div class="calculator-display">{{ display }}</div>
-                        <div class="calculator-buttons">
-                            <button class="calc-btn function" @click="clearAll">AC</button>
-                            <button class="calc-btn function" @click="clearEntry">C</button>
-                            <button class="calc-btn function" @click="backspace">⌫</button>
-                            <button class="calc-btn operator" @click="inputOperator('/')">÷</button>
-                            
-                            <button class="calc-btn number" @click="inputNumber('7')">7</button>
-                            <button class="calc-btn number" @click="inputNumber('8')">8</button>
-                            <button class="calc-btn number" @click="inputNumber('9')">9</button>
-                            <button class="calc-btn operator" @click="inputOperator('*')">×</button>
-                            
-                            <button class="calc-btn number" @click="inputNumber('4')">4</button>
-                            <button class="calc-btn number" @click="inputNumber('5')">5</button>
-                            <button class="calc-btn number" @click="inputNumber('6')">6</button>
-                            <button class="calc-btn operator" @click="inputOperator('-')">-</button>
-                            
-                            <button class="calc-btn number" @click="inputNumber('1')">1</button>
-                            <button class="calc-btn number" @click="inputNumber('2')">2</button>
-                            <button class="calc-btn number" @click="inputNumber('3')">3</button>
-                            <button class="calc-btn operator" @click="inputOperator('+')">+</button>
-                            
-                            <button class="calc-btn number zero" @click="inputNumber('0')">0</button>
-                            <button class="calc-btn number" @click="inputDecimal">.</button>
-                            <button class="calc-btn operator" @click="calculate">=</button>
-                        </div>
-                    </div>
-                </div>                
-                <!-- 工具页面 -->
-                <div v-if="activeTab === 'tools'">
-                    <h2>🛠️ 工具集合</h2>
-                    <p style="color: #666; margin-bottom: 20px;">更多工具正在开发中...</p>
-                    <div class="tools-grid">
-                        <div class="tool-card" @click="activeTab = 'calculator'">
-                            <div class="tool-icon">🧮</div>
-                            <div class="tool-name">计算器</div>
-                        </div>
-                        <div class="tool-card" style="opacity: 0.6; cursor: not-allowed;">
-                            <div class="tool-icon">📏</div>
-                            <div class="tool-name">单位转换</div>
-                        </div>
-                        <div class="tool-card" style="opacity: 0.6; cursor: not-allowed;">
-                            <div class="tool-icon">🎨</div>
-                            <div class="tool-name">颜色工具</div>
-                        </div>
-                        <div class="tool-card" style="opacity: 0.6; cursor: not-allowed;">
-                            <div class="tool-icon">📝</div>
-                            <div class="tool-name">文本工具</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- 关于页面 -->
-                <div v-if="activeTab === 'about'">
-                    <h2>ℹ️ 关于柠枺工具箱</h2>
-                    <div style="line-height: 1.8; color: #555;">
-                        <p><strong>版本：</strong>{{ appVersion }}</p>
-                        <p><strong>开发者：</strong>ning-g-mo</p>
-                        <p><strong>项目地址：</strong><a href="https://github.com/ning-g-mo/lemwoodtools" target="_blank" style="color: #007bff;">GitHub</a></p>
-                        <p><strong>描述：</strong>柠枺工具箱是一个基于Vue.js开发的多功能工具应用，旨在为用户提供便捷的日常工具集合。</p>
-                        <p><strong>特性：</strong></p>
-                        <ul style="margin-left: 20px;">
-                            <li>响应式设计，适配各种屏幕尺寸</li>
-                            <li>基于Vue.js的现代化前端框架</li>
-                            <li>支持多语言（中文/英文）</li>
-                            <li>自动版本检查和更新提醒</li>
-                            <li>GitHub集成的公告系统</li>
-                        </ul>
-                        <p style="margin-top: 20px; font-size: 0.9rem; color: #999;">
-                            © 2024 LemwoodTools. All rights reserved.
-                        </p>
-                    </div>
+                <div class="placeholder-text">
+                    <p>工具已清理</p>
+                    <p>等待重新开发</p>
                 </div>
             </div>
         </div>
-    </div>    <script>
+    </div>
+    
+    <script>
         const { createApp } = Vue;
         
         createApp({
             data() {
                 return {
-                    activeTab: 'announcements',
-                    announcements: [],
-                    appVersion: '1.0.0',
-                    display: '0',
-                    currentInput: '',
-                    operator: null,
-                    previousInput: '',
-                    waitingForOperand: false
+                    message: '工具已清理'
                 }
             },
             mounted() {
-                this.getAppVersion();
-                this.loadDefaultAnnouncements();
-            },
-            methods: {
-                getAppVersion() {
-                    if (typeof Android !== 'undefined') {
-                        this.appVersion = Android.getAppVersion();
-                    }
-                },
-                loadDefaultAnnouncements() {
-                    this.announcements = [
-                        {
-                            title: '欢迎使用柠枺工具箱！',
-                            content: '这是一个基于Vue.js开发的多功能工具应用。目前已集成计算器功能，更多工具正在开发中。',
-                            date: '2024-01-01'
-                        },
-                        {
-                            title: '功能更新',
-                            content: '新增了响应式设计，现在可以更好地适配各种屏幕尺寸。',
-                            date: '2024-01-02'
-                        }
-                    ];
-                },
-                // 计算器方法
-                inputNumber(num) {
-                    if (this.waitingForOperand) {
-                        this.display = num;
-                        this.waitingForOperand = false;
-                    } else {
-                        this.display = this.display === '0' ? num : this.display + num;
-                    }
-                },                inputOperator(nextOperator) {
-                    const inputValue = parseFloat(this.display);
-                    
-                    if (this.previousInput === '') {
-                        this.previousInput = inputValue;
-                    } else if (this.operator) {
-                        const currentValue = this.previousInput || 0;
-                        const newValue = this.performCalculation(currentValue, inputValue, this.operator);
-                        
-                        this.display = String(newValue);
-                        this.previousInput = newValue;
-                    }
-                    
-                    this.waitingForOperand = true;
-                    this.operator = nextOperator;
-                },
-                
-                inputDecimal() {
-                    if (this.waitingForOperand) {
-                        this.display = '0.';
-                        this.waitingForOperand = false;
-                    } else if (this.display.indexOf('.') === -1) {
-                        this.display += '.';
-                    }
-                },
-                
-                clearAll() {
-                    this.display = '0';
-                    this.previousInput = '';
-                    this.operator = null;
-                    this.waitingForOperand = false;
-                },
-                
-                clearEntry() {
-                    this.display = '0';
-                },
-                
-                backspace() {
-                    if (this.display.length > 1) {
-                        this.display = this.display.slice(0, -1);
-                    } else {
-                        this.display = '0';
-                    }
-                },                calculate() {
-                    const inputValue = parseFloat(this.display);
-                    
-                    if (this.previousInput !== '' && this.operator) {
-                        const newValue = this.performCalculation(this.previousInput, inputValue, this.operator);
-                        this.display = String(newValue);
-                        this.previousInput = '';
-                        this.operator = null;
-                        this.waitingForOperand = true;
-                    }
-                },
-                
-                performCalculation(firstOperand, secondOperand, operator) {
-                    switch (operator) {
-                        case '+':
-                            return firstOperand + secondOperand;
-                        case '-':
-                            return firstOperand - secondOperand;
-                        case '*':
-                            return firstOperand * secondOperand;
-                        case '/':
-                            return firstOperand / secondOperand;
-                        default:
-                            return secondOperand;
-                    }
-                }
+                // 基础初始化完成
             }
         }).mount('#app');
-        
-        // 全局函数，供Android调用
-        window.updateAnnouncements = function(announcements) {
-            // 这个函数会被Android端调用来更新公告
-            if (window.vueApp) {
-                window.vueApp.announcements = announcements;
-            }
-        };
     </script>
 </body>
 </html>
