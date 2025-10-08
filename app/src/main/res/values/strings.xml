@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">柠枺工具箱</string>
+    <string name="welcome_message">欢迎使用柠枺工具箱</string>
+    <string name="no_tools_available">暂无可用工具</string>
+</resources>
