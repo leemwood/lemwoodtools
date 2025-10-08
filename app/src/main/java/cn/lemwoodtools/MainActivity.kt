@@ -4,17 +4,24 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Build
-import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import cn.lemwoodtools.ui.theme.LemwoodToolsTheme
+import androidx.compose.material3.ExperimentalMaterial3Api
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,8 +41,8 @@ class MainActivity : ComponentActivity() {
 
 // 定义导航项
 sealed class NavigationItem(val route: String, val title: String, val icon: androidx.compose.ui.graphics.vector.ImageVector) {
-    object Tools : NavigationItem("tools", "工具", Icons.Outlined.Build)
-    object Settings : NavigationItem("settings", "设置", Icons.Outlined.Settings)
+    object Tools : NavigationItem("tools", "工具", Icons.Filled.Build)
+    object Settings : NavigationItem("settings", "设置", Icons.Filled.Settings)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -93,7 +100,7 @@ fun ToolsScreen() {
         verticalArrangement = Arrangement.Center
     ) {
         Icon(
-            imageVector = Icons.Outlined.Build,
+            imageVector = Icons.Filled.Build,
             contentDescription = "工具箱图标",
             modifier = Modifier.size(120.dp),
             tint = MaterialTheme.colorScheme.primary
@@ -102,7 +109,7 @@ fun ToolsScreen() {
         Spacer(modifier = Modifier.height(24.dp))
         
         Text(
-            text = "柠枺工具箱",
+            text = stringResource(R.string.app_name),
             style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground
@@ -111,7 +118,7 @@ fun ToolsScreen() {
         Spacer(modifier = Modifier.height(16.dp))
         
         Text(
-            text = "欢迎使用柠枺工具箱",
+            text = stringResource(R.string.welcome_message),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -119,52 +126,196 @@ fun ToolsScreen() {
         Spacer(modifier = Modifier.height(8.dp))
         
         Text(
-            text = "暂无可用工具",
+            text = stringResource(R.string.no_tools_available),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.outline
         )
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen() {
+    val scrollState = rememberScrollState()
+    
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+            .verticalScroll(scrollState)
     ) {
-        Icon(
-            imageVector = Icons.Outlined.Settings,
-            contentDescription = "设置图标",
-            modifier = Modifier.size(120.dp),
-            tint = MaterialTheme.colorScheme.primary
-        )
+        // 主题设置部分
+        SettingsSection(title = "主题设置", icon = Icons.Filled.Info) {
+            ThemeSettings()
+        }
         
-        Spacer(modifier = Modifier.height(24.dp))
+        Divider(modifier = Modifier.padding(horizontal = 16.dp))
         
-        Text(
-            text = "设置",
-            style = MaterialTheme.typography.headlineLarge,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onBackground
-        )
+        // 应用信息部分
+        SettingsSection(title = "应用信息", icon = Icons.Filled.Info) {
+            AppInfoSettings()
+        }
+    }
+}
+
+@Composable
+fun SettingsSection(
+    title: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    content: @Composable () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = title,
+                modifier = Modifier.size(24.dp),
+                tint = MaterialTheme.colorScheme.primary
+            )
+            
+            Spacer(modifier = Modifier.width(12.dp))
+            
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+        }
         
         Spacer(modifier = Modifier.height(16.dp))
         
+        content()
+    }
+}
+
+@Composable
+fun ThemeSettings() {
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
         Text(
-            text = "应用设置",
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            text = "主题设置",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(bottom = 8.dp)
         )
+        
+        Text(
+            text = "主题设置功能将在后续版本中提供",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.outline
+        )
+    }
+}
+
+@Composable
+fun AppInfoSettings() {
+    val context = LocalContext.current
+    val uriHandler = LocalUriHandler.current
+    
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        // 应用基本信息
+        InfoItem(label = "应用名称", value = stringResource(R.string.app_name))
+        InfoItem(label = "版本", value = "1.0.0")
+        InfoItem(label = "包名", value = "cn.lemwoodtools")
+        
+        Spacer(modifier = Modifier.height(16.dp))
+        
+        // GitHub链接
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            shape = MaterialTheme.shapes.medium,
+            color = MaterialTheme.colorScheme.surfaceVariant,
+            onClick = {
+                uriHandler.openUri("https://github.com/leemwood/leemwoodtools")
+            }
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Info,
+                    contentDescription = "GitHub仓库",
+                    modifier = Modifier.size(24.dp),
+                    tint = MaterialTheme.colorScheme.primary
+                )
+                
+                Spacer(modifier = Modifier.width(12.dp))
+                
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = "GitHub仓库",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                    
+                    Text(
+                        text = "leemwood/leemwoodtools",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                
+                Icon(
+                    imageVector = Icons.Filled.Info,
+                    contentDescription = "打开链接",
+                    modifier = Modifier.size(20.dp),
+                    tint = MaterialTheme.colorScheme.outline
+                )
+            }
+        }
         
         Spacer(modifier = Modifier.height(8.dp))
         
+        // 开发信息
         Text(
-            text = "暂无设置选项",
+            text = "开发信息",
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.outline
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+        
+        Text(
+            text = "柠枺工具箱是一个实用的Android工具集合应用，提供多种便捷功能。",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.outline,
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
+}
+
+@Composable
+fun InfoItem(label: String, value: String) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        
+        Text(
+            text = value,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onBackground
         )
     }
 }
@@ -174,5 +325,13 @@ fun SettingsScreen() {
 fun ToolboxAppPreview() {
     LemwoodToolsTheme {
         ToolboxApp()
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SettingsScreenPreview() {
+    LemwoodToolsTheme {
+        SettingsScreen()
     }
 }
