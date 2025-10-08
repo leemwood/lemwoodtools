@@ -6,6 +6,9 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Settings
@@ -18,6 +21,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.stringResource
@@ -101,6 +106,17 @@ fun ToolboxApp() {
 
 @Composable
 fun ToolsScreen() {
+    val tools = cn.lemwoodtools.ui.tools.ToolsManager.tools
+    
+    if (tools.isEmpty()) {
+        EmptyToolsScreen()
+    } else {
+        ToolsGridScreen(tools)
+    }
+}
+
+@Composable
+fun EmptyToolsScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -109,7 +125,7 @@ fun ToolsScreen() {
         verticalArrangement = Arrangement.Center
     ) {
         Icon(
-            imageVector = Icons.Filled.Build,
+            imageVector = androidx.compose.material.icons.Icons.Filled.Build,
             contentDescription = "工具箱图标",
             modifier = Modifier.size(120.dp),
             tint = MaterialTheme.colorScheme.primary
@@ -139,6 +155,96 @@ fun ToolsScreen() {
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.outline
         )
+    }
+}
+
+@Composable
+fun ToolsGridScreen(tools: List<cn.lemwoodtools.ui.tools.Tool>) {
+    var selectedTool by remember { mutableStateOf<cn.lemwoodtools.ui.tools.Tool?>(null) }
+    
+    if (selectedTool != null) {
+        // 显示选中的工具，并传递返回函数
+        val toolScreen = selectedTool!!.screen
+        
+        // 调用工具屏幕，传递返回函数
+        toolScreen { selectedTool = null }
+    } else {
+        // 显示工具网格
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
+            Text(
+                text = "工具箱",
+                style = MaterialTheme.typography.headlineLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier.padding(bottom = 24.dp)
+            )
+            
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                items(tools) { tool ->
+                    ToolCard(tool = tool, onClick = { selectedTool = tool })
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ToolCard(tool: cn.lemwoodtools.ui.tools.Tool, onClick: () -> Unit) {
+    Card(
+        onClick = onClick,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(120.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Icon(
+                imageVector = tool.icon,
+                contentDescription = tool.name,
+                modifier = Modifier.size(32.dp),
+                tint = MaterialTheme.colorScheme.primary
+            )
+            
+            Spacer(modifier = Modifier.height(8.dp))
+            
+            Text(
+                text = tool.name,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center
+            )
+            
+            Spacer(modifier = Modifier.height(4.dp))
+            
+            Text(
+                text = tool.description,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
     }
 }
 

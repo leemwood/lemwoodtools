@@ -69,6 +69,16 @@ dependencies {
     // DataStore for theme preferences
     implementation "androidx.datastore:datastore-preferences:1.0.0"
     
+    // Markdown相关依赖
+    implementation "io.noties.markwon:core:4.6.2"
+    implementation "io.noties.markwon:editor:4.6.2"
+    implementation "io.noties.markwon:html:4.6.2"
+    implementation "io.noties.markwon:image:4.6.2"
+    implementation "io.noties.markwon:linkify:4.6.2"
+    
+    // 文件选择器
+    implementation "com.google.accompanist:accompanist-permissions:0.31.5-beta"
+    
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
