@@ -76,3 +76,18 @@ fun LemwoodToolsTheme(
         content = content
     )
 }
+
+// 新的主题函数，支持主题管理器
+@Composable
+fun LemwoodToolsThemeWithManager(
+    themeMode: ThemeMode = currentThemeMode(),
+    content: @Composable () -> Unit
+) {
+    val isSystemInDarkTheme = isSystemInDarkTheme()
+    val shouldUseDarkTheme = rememberThemeManager().shouldUseDarkTheme(themeMode, isSystemInDarkTheme)
+    
+    LemwoodToolsTheme(
+        darkTheme = shouldUseDarkTheme,
+        content = content
+    )
+}
