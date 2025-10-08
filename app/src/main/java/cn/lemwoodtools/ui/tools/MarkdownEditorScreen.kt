@@ -65,9 +65,9 @@ fun MarkdownEditorScreen(onBackClick: () -> Unit) {
             // 预览区域
             if (showPreview) {
                 Box(modifier = Modifier.weight(1f).fillMaxHeight()) {
-                    Text(
-                        text = markdownText,
-                        modifier = Modifier.fillMaxSize().padding(16.dp)
+                    MarkdownPreview(
+                        markdownText = markdownText,
+                        modifier = Modifier.fillMaxSize()
                     )
                 }
             }
