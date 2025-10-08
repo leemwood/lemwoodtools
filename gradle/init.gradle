@@ -1,0 +1,21 @@
+allprojects {
+    repositories {
+        maven { url 'https://mirrors.cloud.tencent.com/google/' }
+        maven { url 'https://mirrors.cloud.tencent.com/maven-central/' }
+        maven { url 'https://mirrors.cloud.tencent.com/gradle/gradle-plugin-portal/' }
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    
+    buildscript {
+        repositories {
+            maven { url 'https://mirrors.cloud.tencent.com/google/' }
+            maven { url 'https://mirrors.cloud.tencent.com/maven-central/' }
+            maven { url 'https://mirrors.cloud.tencent.com/gradle/gradle-plugin-portal/' }
+            google()
+            mavenCentral()
+            gradlePluginPortal()
+        }
+    }
+}

@@ -1,5 +1,8 @@
 pluginManagement {
     repositories {
+        maven { url 'https://mirrors.cloud.tencent.com/gradle/gradle-plugin-portal/' }
+        maven { url 'https://mirrors.cloud.tencent.com/google/' }
+        maven { url 'https://mirrors.cloud.tencent.com/maven-central/' }
         gradlePluginPortal()
         google()
         mavenCentral()
@@ -8,6 +11,8 @@ pluginManagement {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
+        maven { url 'https://mirrors.cloud.tencent.com/google/' }
+        maven { url 'https://mirrors.cloud.tencent.com/maven-central/' }
         google()
         mavenCentral()
     }

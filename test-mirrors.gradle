@@ -1,0 +1,32 @@
+// 测试镜像源配置的脚本
+task testMirrors {
+    doLast {
+        println "测试镜像源配置..."
+        
+        // 测试Google仓库
+        try {
+            repositories.maven { url 'https://mirrors.tuna.tsinghua.edu.cn/google/' }
+            println "✓ 清华大学Google镜像源可用"
+        } catch (Exception e) {
+            println "✗ 清华大学Google镜像源不可用: ${e.message}"
+        }
+        
+        // 测试Maven Central仓库
+        try {
+            repositories.maven { url 'https://mirrors.tuna.tsinghua.edu.cn/maven-central/' }
+            println "✓ 清华大学Maven Central镜像源可用"
+        } catch (Exception e) {
+            println "✗ 清华大学Maven Central镜像源不可用: ${e.message}"
+        }
+        
+        // 测试Gradle插件仓库
+        try {
+            repositories.maven { url 'https://mirrors.tuna.tsinghua.edu.cn/gradle/gradle-plugin-portal/' }
+            println "✓ 清华大学Gradle插件镜像源可用"
+        } catch (Exception e) {
+            println "✗ 清华大学Gradle插件镜像源不可用: ${e.message}"
+        }
+        
+        println "镜像源测试完成"
+    }
+}
