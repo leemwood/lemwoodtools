@@ -134,7 +134,9 @@ object FileManager {
     fun exportFile(context: Context, fileName: String, content: String, uri: Uri): Boolean {
         return try {
             context.contentResolver.openOutputStream(uri)?.use { outputStream ->
-                outputStream.write(content.toByteArray(Charsets.UTF_8))
+                // 确保内容以UTF-8编码写入，并添加适当的换行符
+                val formattedContent = content.trim() + "\n"
+                outputStream.write(formattedContent.toByteArray(Charsets.UTF_8))
                 outputStream.flush()
             }
             true
@@ -167,9 +169,53 @@ object FileManager {
     }
     
     /**
-     * 分享文件
+     * 分享文件（打包成文件分享）
      */
     fun shareFile(context: Context, fileName: String, content: String) {
+        try {
+            // 创建临时文件
+            val tempFile = File.createTempFile("share_", ".md", context.cacheDir)
+            tempFile.writeText(content, Charsets.UTF_8)
+            
+            // 获取文件的URI
+            val fileUri = androidx.core.content.FileProvider.getUriForFile(
+                context,
+                "${context.packageName}.provider",
+                tempFile
+            )
+            
+            val intent = Intent(Intent.ACTION_SEND).apply {
+                type = "text/markdown"
+                putExtra(Intent.EXTRA_STREAM, fileUri)
+                putExtra(Intent.EXTRA_SUBJECT, fileName)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+            
+            val chooser = Intent.createChooser(intent, "分享 $fileName")
+            context.startActivity(chooser)
+            
+            // 在分享完成后删除临时文件（延迟执行）
+            android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
+                try {
+                    if (tempFile.exists()) {
+                        tempFile.delete()
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }, 30000) // 30秒后删除临时文件
+            
+        } catch (e: Exception) {
+            e.printStackTrace()
+            // 如果文件分享失败，回退到文本分享
+            fallbackShareText(context, fileName, content)
+        }
+    }
+    
+    /**
+     * 回退到文本分享（当文件分享失败时使用）
+     */
+    private fun fallbackShareText(context: Context, fileName: String, content: String) {
         try {
             val intent = Intent(Intent.ACTION_SEND).apply {
                 type = "text/plain"

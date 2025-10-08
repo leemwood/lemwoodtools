@@ -54,7 +54,15 @@ fun ImportExportManager(
             uri?.let {
                 // 在导出回调中处理文件内容
                 coroutineScope.launch {
-                    FileManager.exportFile(context, fileName, content, uri)
+                    // 确保文件名有正确的扩展名
+                    val exportFileName = if (fileName.endsWith(".md") || fileName.endsWith(".markdown")) {
+                        fileName
+                    } else {
+                        "$fileName.md"
+                    }
+                    
+                    // 导出文件
+                    FileManager.exportFile(context, exportFileName, content, uri)
                     exportCallback()
                 }
             }
