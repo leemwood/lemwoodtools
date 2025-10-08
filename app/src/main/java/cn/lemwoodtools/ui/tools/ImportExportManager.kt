@@ -23,10 +23,11 @@ fun ImportExportManager(
     fileName: String,
     content: String,
     onImport: (String, String) -> Unit,
-    onExport: (Uri) -> Unit,
+    onExport: () -> Unit,
     onShare: () -> Unit
 ) {
     // 使用参数避免警告
+    val exportCallback = onExport
     val shareCallback = onShare
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -51,7 +52,11 @@ fun ImportExportManager(
         contract = ActivityResultContracts.CreateDocument("text/markdown"),
         onResult = { uri ->
             uri?.let {
-                onExport(it)
+                // 在导出回调中处理文件内容
+                coroutineScope.launch {
+                    FileManager.exportFile(context, fileName, content, uri)
+                    exportCallback()
+                }
             }
         }
     )

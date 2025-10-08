@@ -161,19 +161,16 @@ fun MarkdownEditorScreen(onBackClick: () -> Unit) {
             ImportExportManager(
                 fileName = fileName,
                 content = markdownText,
-                onImport = { content, newName ->
-                    markdownText = content
+                onImport = { newName, content ->
                     fileName = newName
+                    markdownText = content
                     lastSavedContent = content
                     hasUnsavedChanges = false
                     showImportExport = false
                 },
-                onExport = { uri ->
-                    // 处理导出逻辑
-                    coroutineScope.launch {
-                        FileManager.exportFile(context, fileName, markdownText, uri)
-                        showImportExport = false
-                    }
+                onExport = { 
+                    // 导出完成后关闭对话框
+                    showImportExport = false
                 },
                 onShare = {
                     FileManager.shareFile(context, fileName, markdownText)
