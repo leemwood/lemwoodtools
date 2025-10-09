@@ -1,8 +1,11 @@
 package cn.lemwoodtools.ui.tools
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.provider.DocumentsContract
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -172,6 +175,13 @@ object FileManager {
      * 分享文件（打包成文件分享）
      */
     fun shareFile(context: Context, fileName: String, content: String) {
+        // 检查权限状态
+        if (!hasRequiredPermissions(context)) {
+            // 显示权限申请提示
+            showPermissionRequestDialog(context)
+            return
+        }
+        
         try {
             // 创建临时文件
             val tempFile = File.createTempFile("share_", ".md", context.cacheDir)
@@ -296,7 +306,76 @@ object FileManager {
         val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
         return sdf.format(date)
     }
+    
+    /**
+     * 检查是否具有必要的权限
+     */
+    private fun hasRequiredPermissions(context: Context): Boolean {
+        val requiredPermissions = mutableListOf<String>().apply {
+            add(Manifest.permission.READ_EXTERNAL_STORAGE)
+            add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                add(Manifest.permission.READ_MEDIA_IMAGES)
+                add(Manifest.permission.READ_MEDIA_VIDEO)
+                add(Manifest.permission.READ_MEDIA_AUDIO)
+            }
+        }
+        
+        return requiredPermissions.all { permission ->
+            context.checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED
+        }
+    }
+    
+    /**
+     * 显示权限申请对话框
+     */
+    private fun showPermissionRequestDialog(context: Context) {
+        // 创建权限申请对话框
+        val alertDialog = android.app.AlertDialog.Builder(context)
+            .setTitle("需要权限")
+            .setMessage("应用需要文件读写权限才能正常使用分享功能。请授予必要的权限。")
+            .setPositiveButton("申请权限") { _, _ ->
+                // 启动权限申请
+                requestPermissions(context)
+            }
+            .setNegativeButton("取消") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .create()
+        
+        alertDialog.show()
+    }
+    
+    /**
+     * 请求必要权限
+     */
+    private fun requestPermissions(context: Context) {
+        val permissionsToRequest = mutableListOf<String>().apply {
+            add(Manifest.permission.READ_EXTERNAL_STORAGE)
+            add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                add(Manifest.permission.READ_MEDIA_IMAGES)
+                add(Manifest.permission.READ_MEDIA_VIDEO)
+                add(Manifest.permission.READ_MEDIA_AUDIO)
+            }
+        }
+        
+        // 启动权限申请
+        if (context is android.app.Activity) {
+            context.requestPermissions(
+                permissionsToRequest.toTypedArray(),
+                PERMISSION_REQUEST_CODE
+            )
+        }
+    }
 }
+
+/**
+ * 权限申请请求码
+ */
+private const val PERMISSION_REQUEST_CODE = 1001
 
 /**
  * 文件信息数据类

@@ -1,8 +1,12 @@
 package cn.lemwoodtools
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -38,8 +42,28 @@ import cn.lemwoodtools.ui.theme.rememberThemeManager
 import androidx.compose.material3.ExperimentalMaterial3Api
 
 class MainActivity : ComponentActivity() {
+    
+    // 权限申请启动器
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        // 处理权限申请结果
+        val allGranted = permissions.values.all { it }
+        if (allGranted) {
+            // 所有权限都已授予
+            println("所有权限已授予")
+        } else {
+            // 部分或全部权限被拒绝
+            println("部分权限被拒绝: $permissions")
+        }
+    }
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        // 检查并申请必要权限
+        checkAndRequestPermissions()
+        
         setContent {
             LemwoodToolsThemeWithManager {
                 Surface(
@@ -49,6 +73,60 @@ class MainActivity : ComponentActivity() {
                     ToolboxApp()
                 }
             }
+        }
+    }
+    
+    /**
+     * 检查并申请必要权限
+     */
+    private fun checkAndRequestPermissions() {
+        val permissionsToRequest = mutableListOf<String>()
+        
+        // 检查文件读写权限
+        if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            permissionsToRequest.add(Manifest.permission.READ_EXTERNAL_STORAGE)
+        }
+        
+        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            permissionsToRequest.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        }
+        
+        // Android 13+ 媒体文件权限
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (checkSelfPermission(Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED) {
+                permissionsToRequest.add(Manifest.permission.READ_MEDIA_IMAGES)
+            }
+            if (checkSelfPermission(Manifest.permission.READ_MEDIA_VIDEO) != PackageManager.PERMISSION_GRANTED) {
+                permissionsToRequest.add(Manifest.permission.READ_MEDIA_VIDEO)
+            }
+            if (checkSelfPermission(Manifest.permission.READ_MEDIA_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                permissionsToRequest.add(Manifest.permission.READ_MEDIA_AUDIO)
+            }
+        }
+        
+        // 如果有需要申请的权限，则发起申请
+        if (permissionsToRequest.isNotEmpty()) {
+            requestPermissionLauncher.launch(permissionsToRequest.toTypedArray())
+        }
+    }
+    
+    /**
+     * 检查是否所有必要权限都已授予
+     */
+    fun hasAllRequiredPermissions(): Boolean {
+        val requiredPermissions = mutableListOf<String>().apply {
+            add(Manifest.permission.READ_EXTERNAL_STORAGE)
+            add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                add(Manifest.permission.READ_MEDIA_IMAGES)
+                add(Manifest.permission.READ_MEDIA_VIDEO)
+                add(Manifest.permission.READ_MEDIA_AUDIO)
+            }
+        }
+        
+        return requiredPermissions.all { permission ->
+            checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED
         }
     }
 }
